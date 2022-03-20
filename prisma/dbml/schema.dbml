@@ -1,0 +1,218 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  email String [pk]
+  name String [not null]
+  isOnBoarded Boolean [not null]
+  tags Tag [not null]
+  clubCoordinator ClubCoordinator [not null]
+  clubMember ClubMember [not null]
+  subscription Subscription [not null]
+  rsvpEvent RSVPEvent [not null]
+  votes Vote [not null]
+  positions Position [not null]
+  studentRank StudentRank
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+}
+
+Table Club {
+  id String [pk]
+  name String [not null]
+  description String [not null]
+  links String [not null]
+  tags Tag [not null]
+  clubCoordinator ClubCoordinator [not null]
+  clubMember ClubMember [not null]
+  subscription Subscription [not null]
+  events Event [not null]
+  clubRank ClubRank
+  otp OTP
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+}
+
+Table Event {
+  id String [pk]
+  name String [not null]
+  description String [not null]
+  link String
+  deadline DateTime
+  eventStartDate DateTime
+  eventEndDate DateTime
+  venue String
+  votes Vote [not null]
+  rsvpEvent RSVPEvent [not null]
+  postions Position [not null]
+  clubs Club [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+}
+
+Table Tag {
+  id String [pk]
+  name String [not null]
+  clubs Club [not null]
+  users User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Position {
+  id String [pk]
+  event Event [not null]
+  eventId String [not null]
+  position String [not null]
+  user User [not null]
+  userEmail String [not null]
+  money Int
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table StudentRank {
+  id String [pk]
+  user User [not null]
+  userEmail String [unique, not null]
+  rank Int [not null]
+  eventCount Int [not null]
+  moneyEarned Int [not null]
+  firstCount Int [not null]
+  secondCount Int [not null]
+  thirdCount Int [not null]
+}
+
+Table ClubRank {
+  id String [pk]
+  club Club [not null]
+  clubId String [unique, not null]
+  rank Int [not null]
+  eventCount Int [not null]
+  moneyAwarded Int [not null]
+  rsvpCount Int [not null]
+  upVoteCount Int [not null]
+}
+
+Table OTP {
+  id String [pk]
+  club Club [not null]
+  clubId String [unique, not null]
+  otp String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  expiredAt DateTime [not null]
+}
+
+Table ClubCoordinator {
+  club Club [not null]
+  clubId String [not null]
+  user User [not null]
+  userEmail String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+
+  indexes {
+    (clubId, userEmail) [pk]
+  }
+}
+
+Table ClubMember {
+  club Club [not null]
+  clubId String [not null]
+  user User [not null]
+  userEmail String [not null]
+  level Int [not null, default: 0]
+  createdAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+
+  indexes {
+    (clubId, userEmail) [pk]
+  }
+}
+
+Table Subscription {
+  club Club [not null]
+  clubId String [not null]
+  user User [not null]
+  userEmail String [not null]
+  createdAt DateTime [default: `now()`, not null]
+
+  indexes {
+    (clubId, userEmail) [pk]
+  }
+}
+
+Table RSVPEvent {
+  eventId String [not null]
+  event Event [not null]
+  userEmail String [not null]
+  user User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  deletedAt DateTime
+
+  indexes {
+    (eventId, userEmail) [pk]
+  }
+}
+
+Table Vote {
+  vote Boolean [not null]
+  eventId String [not null]
+  event Event [not null]
+  userEmail String [not null]
+  user User [not null]
+
+  indexes {
+    (eventId, userEmail) [pk]
+  }
+}
+
+Table TagToUser {
+  tagsId String [ref: > Tag.id]
+  usersId String [ref: > User.email]
+}
+
+Table ClubToTag {
+  tagsId String [ref: > Tag.id]
+  clubsId String [ref: > Club.id]
+}
+
+Table ClubToEvent {
+  eventsId String [ref: > Event.id]
+  clubsId String [ref: > Club.id]
+}
+
+Ref: Position.eventId > Event.id
+
+Ref: Position.userEmail > User.email
+
+Ref: StudentRank.userEmail - User.email
+
+Ref: ClubRank.clubId - Club.id
+
+Ref: OTP.clubId - Club.id
+
+Ref: ClubCoordinator.clubId > Club.id
+
+Ref: ClubCoordinator.userEmail > User.email
+
+Ref: ClubMember.clubId > Club.id
+
+Ref: ClubMember.userEmail > User.email
+
+Ref: Subscription.clubId > Club.id
+
+Ref: Subscription.userEmail > User.email
+
+Ref: RSVPEvent.eventId > Event.id
+
+Ref: RSVPEvent.userEmail > User.email
+
+Ref: Vote.eventId > Event.id
+
+Ref: Vote.userEmail > User.email

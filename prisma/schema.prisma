@@ -1,0 +1,186 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+generator typegraphql {
+  provider = "typegraphql-prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  email           String            @id
+  name            String
+  isOnBoarded     Boolean
+  tags            Tag[]
+  clubCoordinator ClubCoordinator[]
+  clubMember      ClubMember[]
+  subscription    Subscription[]
+  rsvpEvent       RSVPEvent[]
+  votes           Vote[]
+  positions       Position[]
+  studentRank     StudentRank?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+}
+
+model Club {
+  id              String            @id @default(uuid())
+  name            String
+  description     String
+  links           String
+  tags            Tag[]
+  clubCoordinator ClubCoordinator[]
+  clubMember      ClubMember[]
+  subscription    Subscription[]
+  events          Event[]
+  clubRank        ClubRank?
+  otp             OTP?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+}
+
+model Event {
+  id             String      @id @default(uuid())
+  name           String
+  description    String
+  link           String?
+  deadline       DateTime?
+  eventStartDate DateTime?
+  eventEndDate   DateTime?
+  venue          String?
+  votes          Vote[]
+  rsvpEvent      RSVPEvent[]
+  postions       Position[]
+  clubs          Club[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deletedAt      DateTime?
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String
+  clubs     Club[]
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Position {
+  id        String   @id @default(uuid())
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  position  String // Valiate first, second, third, other;
+  user      User     @relation(fields: [userEmail], references: [email])
+  userEmail String
+  money     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StudentRank {
+  id          String @id @default(uuid())
+  user        User   @relation(fields: [userEmail], references: [email])
+  userEmail   String @unique
+  rank        Int
+  eventCount  Int
+  moneyEarned Int
+  firstCount  Int
+  secondCount Int
+  thirdCount  Int
+}
+
+model ClubRank {
+  id           String @id @default(uuid())
+  club         Club   @relation(fields: [clubId], references: [id])
+  clubId       String @unique
+  rank         Int
+  eventCount   Int
+  moneyAwarded Int
+  rsvpCount    Int
+  upVoteCount  Int
+}
+
+model OTP {
+  id        String   @id @default(uuid())
+  club      Club     @relation(fields: [clubId], references: [id])
+  clubId    String   @unique
+  otp       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiredAt DateTime
+}
+
+// Defining Relation Mappings
+
+model ClubCoordinator {
+  club      Club      @relation(fields: [clubId], references: [id])
+  clubId    String
+  user      User      @relation(fields: [userEmail], references: [email])
+  userEmail String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  @@id([clubId, userEmail])
+}
+
+model ClubMember {
+  club      Club      @relation(fields: [clubId], references: [id])
+  clubId    String
+  user      User      @relation(fields: [userEmail], references: [email])
+  userEmail String
+  level     Int       @default(0)
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  @@id([clubId, userEmail])
+}
+
+model Subscription {
+  club      Club     @relation(fields: [clubId], references: [id])
+  clubId    String
+  user      User     @relation(fields: [userEmail], references: [email])
+  userEmail String
+  createdAt DateTime @default(now())
+
+  @@id([clubId, userEmail])
+}
+
+model RSVPEvent {
+  eventId   String
+  event     Event     @relation(fields: [eventId], references: [id])
+  userEmail String
+  user      User      @relation(fields: [userEmail], references: [email])
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  @@id([eventId, userEmail])
+}
+
+model Vote {
+  vote      Boolean // True - upvote, False - downvote
+  eventId   String
+  event     Event   @relation(fields: [eventId], references: [id])
+  userEmail String
+  user      User    @relation(fields: [userEmail], references: [email])
+
+  @@id([eventId, userEmail])
+}
+
+// enum VoteStatus {
+//   UPVOTE
+//   DOWNVOTE
+// }
