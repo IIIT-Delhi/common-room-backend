@@ -13,6 +13,7 @@ Table User {
   rsvpEvent RSVPEvent [not null]
   votes Vote [not null]
   positions Position [not null]
+  notifications Notification [not null]
   studentRank StudentRank
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -29,6 +30,7 @@ Table Club {
   clubMember ClubMember [not null]
   subscription Subscription [not null]
   events Event [not null]
+  notifications Notification [not null]
   clubRank ClubRank
   otp OTP
   createdAt DateTime [default: `now()`, not null]
@@ -108,6 +110,16 @@ Table OTP {
   expiredAt DateTime [not null]
 }
 
+Table Notification {
+  id String [pk]
+  createdFor User [not null]
+  createdBy Club [not null]
+  clubId String [unique, not null]
+  message String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Table ClubCoordinator {
   club Club [not null]
   clubId String [not null]
@@ -177,6 +189,11 @@ Table TagToUser {
   usersId String [ref: > User.email]
 }
 
+Table NotificationToUser {
+  notificationsId String [ref: > Notification.id]
+  createdforId String [ref: > User.email]
+}
+
 Table ClubToTag {
   tagsId String [ref: > Tag.id]
   clubsId String [ref: > Club.id]
@@ -196,6 +213,8 @@ Ref: StudentRank.userEmail - User.email
 Ref: ClubRank.clubId - Club.id
 
 Ref: OTP.clubId - Club.id
+
+Ref: Notification.clubId > Club.id
 
 Ref: ClubCoordinator.clubId > Club.id
 

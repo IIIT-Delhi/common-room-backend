@@ -29,6 +29,7 @@ model User {
   rsvpEvent       RSVPEvent[]
   votes           Vote[]
   positions       Position[]
+  notifications   Notification[]
   studentRank     StudentRank?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -45,6 +46,7 @@ model Club {
   clubMember      ClubMember[]
   subscription    Subscription[]
   events          Event[]
+  notifications   Notification[]
   clubRank        ClubRank?
   otp             OTP?
   createdAt       DateTime          @default(now())
@@ -122,6 +124,16 @@ model OTP {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   expiredAt DateTime
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  createdFor User[]
+  createdBy  Club     @relation(fields: [clubId], references: [id])
+  clubId     String   @unique
+  message    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 // Defining Relation Mappings
