@@ -5,4 +5,8 @@ export default () => ({
         port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
     },
     env: process.env.NODE_ENV || 'development',
+    jwt: process.env.JWT_SECRET || 'secret',
+    firebase: {
+        db: process.env.FIREBASE_DB,
+    },
 });

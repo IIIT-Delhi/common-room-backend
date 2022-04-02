@@ -1,11 +1,12 @@
 import { Module, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+// import { AppController } from './app.controller';
+// import { AppService } from './app.service';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
 import { Context } from 'apollo-server-core';
 import { resolvers } from '@generated/type-graphql';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
+import { AuthModule } from './auth/auth.module';
 
 import configuration from './config/configuration';
 
@@ -48,8 +49,8 @@ const playground = {
                 context: (): Context => ({ prisma }),
             }),
         }),
+        AuthModule,
     ],
-    controllers: [AppController],
-    providers: [AppService, ...MyResolvers],
+    providers: [...MyResolvers, PrismaService],
 })
 export class AppModule {}

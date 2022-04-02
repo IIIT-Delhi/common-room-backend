@@ -13,6 +13,10 @@ generator typegraphql {
   provider = "typegraphql-prisma"
 }
 
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -21,6 +25,8 @@ datasource db {
 model User {
   email           String            @id
   name            String
+  picture         String            @default("https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y")
+  jwtToken        String?
   isOnBoarded     Boolean
   tags            Tag[]
   clubCoordinator ClubCoordinator[]

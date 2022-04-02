@@ -5,6 +5,8 @@
 Table User {
   email String [pk]
   name String [not null]
+  picture String [not null, default: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y']
+  jwtToken String
   isOnBoarded Boolean [not null]
   tags Tag [not null]
   clubCoordinator ClubCoordinator [not null]
