@@ -27,6 +27,7 @@ Table Club {
   name String [not null]
   description String [not null]
   links String [not null]
+  image String [not null, default: 'https://www.gravatar.com/avatar/']
   tags Tag [not null]
   clubCoordinator ClubCoordinator [not null]
   clubMember ClubMember [not null]
@@ -44,6 +45,7 @@ Table Event {
   id String [pk]
   name String [not null]
   description String [not null]
+  image String [not null, default: 'https://www.gravatar.com/avatar/']
   link String
   deadline DateTime
   eventStartDate DateTime

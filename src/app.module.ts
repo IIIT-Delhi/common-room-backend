@@ -1,21 +1,41 @@
 import { Module, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
 import { Context } from 'apollo-server-core';
-import { resolvers } from '@generated/type-graphql';
+import {
+    resolvers,
+    applyResolversEnhanceMap,
+    applyRelationResolversEnhanceMap,
+} from '@generated/type-graphql';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 import { AuthModule } from './auth/auth.module';
+import { ImageModule } from './image/image.module';
+import { UseMiddleware } from 'type-graphql';
+import { authChecker } from './auth/auth.middleware';
 
 import configuration from './config/configuration';
 
 const MyResolvers: Provider[] = [];
 
+const resolverObjects = {};
+
 // iterate over all resolvers and add them to the MyResolvers array
 resolvers.forEach((resolver) => {
+    const resolverName = resolver.name
+        .replace('CrudResolver', '')
+        .replace('RelationsResolver', '');
+
+    resolverObjects[resolverName] = {
+        _all: [UseMiddleware(authChecker)],
+    };
+
     MyResolvers.push(resolver as Provider);
 });
+
+applyResolversEnhanceMap(resolverObjects);
+applyRelationResolversEnhanceMap(resolverObjects);
 
 const playground = {
     endpoint: '/graphql',
@@ -50,7 +70,8 @@ const playground = {
             }),
         }),
         AuthModule,
+        ImageModule,
     ],
-    providers: [...MyResolvers, PrismaService],
+    providers: [...MyResolvers, PrismaService, AppService, AppController],
 })
 export class AppModule {}

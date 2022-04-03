@@ -47,6 +47,7 @@ model Club {
   name            String
   description     String
   links           String
+  image           String            @default("https://www.gravatar.com/avatar/")
   tags            Tag[]
   clubCoordinator ClubCoordinator[]
   clubMember      ClubMember[]
@@ -64,6 +65,7 @@ model Event {
   id             String      @id @default(uuid())
   name           String
   description    String
+  image          String      @default("https://www.gravatar.com/avatar/")
   link           String?
   deadline       DateTime?
   eventStartDate DateTime?

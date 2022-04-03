@@ -1,9 +1,14 @@
-import { Resolver, Mutation, Arg, Query, Ctx } from 'type-graphql';
+import {
+    Resolver,
+    Mutation,
+    Arg,
+    Query,
+    Ctx,
+    UseMiddleware,
+} from 'type-graphql';
 import { Auth } from './auth.model';
-// import { Mutation } from 'type-graphql';
 import { AuthService } from './auth.service';
-import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from './jwt-guard';
+import { authChecker } from './auth.middleware';
 
 @Resolver(Auth)
 export class AuthResolver {
@@ -15,10 +20,8 @@ export class AuthResolver {
     }
 
     @Query(() => Boolean)
-    @UseGuards(JwtAuthGuard)
+    @UseMiddleware(authChecker)
     logout(@Ctx() ctx: any): Promise<boolean> {
-        console.log('here');
-        // console.log(ctx);
-        return this.authService.logout(ctx);
+        return this.authService.logout(ctx.req.user);
     }
 }

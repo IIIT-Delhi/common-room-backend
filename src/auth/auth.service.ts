@@ -36,7 +36,7 @@ export class AuthService {
             sub: user.email,
         });
 
-        this.prisma.user.update({
+        user = await this.prisma.user.update({
             where: { email },
             data: {
                 jwtToken,
@@ -49,17 +49,16 @@ export class AuthService {
         };
     }
 
-    async logout(ctx: any): Promise<boolean> {
-        const { user } = ctx;
+    async logout(user: any): Promise<boolean> {
         if (!user) {
             throw new Error('User not found');
         }
-        // this.prisma.user.update({
-        //     where: { email: user.email },
-        //     data: {
-        //         jwtToken: null,
-        //     },
-        // });
+        await this.prisma.user.update({
+            where: { email: user.email },
+            data: {
+                jwtToken: null,
+            },
+        });
         return true;
     }
 }

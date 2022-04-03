@@ -131,6 +131,7 @@ type Club {
   description: String!
   events(cursor: EventWhereUniqueInput, distinct: [EventScalarFieldEnum!], orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): [Event!]!
   id: String!
+  image: String!
   links: String!
   name: String!
   notifications(cursor: NotificationWhereUniqueInput, distinct: [NotificationScalarFieldEnum!], orderBy: [NotificationOrderByWithRelationInput!], skip: Int, take: Int, where: NotificationWhereInput): [Notification!]!
@@ -417,6 +418,7 @@ type ClubCountAggregate {
   deletedAt: Int!
   description: Int!
   id: Int!
+  image: Int!
   links: Int!
   name: Int!
   updatedAt: Int!
@@ -427,6 +429,7 @@ input ClubCountOrderByAggregateInput {
   deletedAt: SortOrder
   description: SortOrder
   id: SortOrder
+  image: SortOrder
   links: SortOrder
   name: SortOrder
   updatedAt: SortOrder
@@ -441,6 +444,7 @@ input ClubCreateInput {
   description: String!
   events: EventCreateNestedManyWithoutClubsInput
   id: String
+  image: String
   links: String!
   name: String!
   notifications: NotificationCreateNestedManyWithoutCreatedByInput
@@ -546,6 +550,7 @@ input ClubCreateWithoutClubCoordinatorInput {
   description: String!
   events: EventCreateNestedManyWithoutClubsInput
   id: String
+  image: String
   links: String!
   name: String!
   notifications: NotificationCreateNestedManyWithoutCreatedByInput
@@ -563,6 +568,7 @@ input ClubCreateWithoutClubMemberInput {
   description: String!
   events: EventCreateNestedManyWithoutClubsInput
   id: String
+  image: String
   links: String!
   name: String!
   notifications: NotificationCreateNestedManyWithoutCreatedByInput
@@ -580,6 +586,7 @@ input ClubCreateWithoutClubRankInput {
   description: String!
   events: EventCreateNestedManyWithoutClubsInput
   id: String
+  image: String
   links: String!
   name: String!
   notifications: NotificationCreateNestedManyWithoutCreatedByInput
@@ -597,6 +604,7 @@ input ClubCreateWithoutEventsInput {
   deletedAt: DateTime
   description: String!
   id: String
+  image: String
   links: String!
   name: String!
   notifications: NotificationCreateNestedManyWithoutCreatedByInput
@@ -615,6 +623,7 @@ input ClubCreateWithoutNotificationsInput {
   description: String!
   events: EventCreateNestedManyWithoutClubsInput
   id: String
+  image: String
   links: String!
   name: String!
   otp: OTPCreateNestedOneWithoutClubInput
@@ -632,6 +641,7 @@ input ClubCreateWithoutOtpInput {
   description: String!
   events: EventCreateNestedManyWithoutClubsInput
   id: String
+  image: String
   links: String!
   name: String!
   notifications: NotificationCreateNestedManyWithoutCreatedByInput
@@ -649,6 +659,7 @@ input ClubCreateWithoutSubscriptionInput {
   description: String!
   events: EventCreateNestedManyWithoutClubsInput
   id: String
+  image: String
   links: String!
   name: String!
   notifications: NotificationCreateNestedManyWithoutCreatedByInput
@@ -666,6 +677,7 @@ input ClubCreateWithoutTagsInput {
   description: String!
   events: EventCreateNestedManyWithoutClubsInput
   id: String
+  image: String
   links: String!
   name: String!
   notifications: NotificationCreateNestedManyWithoutCreatedByInput
@@ -682,6 +694,7 @@ type ClubGroupBy {
   deletedAt: DateTime
   description: String!
   id: String!
+  image: String!
   links: String!
   name: String!
   updatedAt: DateTime!
@@ -698,6 +711,7 @@ type ClubMaxAggregate {
   deletedAt: DateTime
   description: String
   id: String
+  image: String
   links: String
   name: String
   updatedAt: DateTime
@@ -708,6 +722,7 @@ input ClubMaxOrderByAggregateInput {
   deletedAt: SortOrder
   description: SortOrder
   id: SortOrder
+  image: SortOrder
   links: SortOrder
   name: SortOrder
   updatedAt: SortOrder
@@ -1021,6 +1036,7 @@ type ClubMinAggregate {
   deletedAt: DateTime
   description: String
   id: String
+  image: String
   links: String
   name: String
   updatedAt: DateTime
@@ -1031,6 +1047,7 @@ input ClubMinOrderByAggregateInput {
   deletedAt: SortOrder
   description: SortOrder
   id: SortOrder
+  image: SortOrder
   links: SortOrder
   name: SortOrder
   updatedAt: SortOrder
@@ -1048,6 +1065,7 @@ input ClubOrderByWithAggregationInput {
   deletedAt: SortOrder
   description: SortOrder
   id: SortOrder
+  image: SortOrder
   links: SortOrder
   name: SortOrder
   updatedAt: SortOrder
@@ -1062,6 +1080,7 @@ input ClubOrderByWithRelationInput {
   description: SortOrder
   events: EventOrderByRelationAggregateInput
   id: SortOrder
+  image: SortOrder
   links: SortOrder
   name: SortOrder
   notifications: NotificationOrderByRelationAggregateInput
@@ -1346,6 +1365,7 @@ enum ClubScalarFieldEnum {
   deletedAt
   description
   id
+  image
   links
   name
   updatedAt
@@ -1359,6 +1379,7 @@ input ClubScalarWhereInput {
   deletedAt: DateTimeNullableFilter
   description: StringFilter
   id: StringFilter
+  image: StringFilter
   links: StringFilter
   name: StringFilter
   updatedAt: DateTimeFilter
@@ -1372,6 +1393,7 @@ input ClubScalarWhereWithAggregatesInput {
   deletedAt: DateTimeNullableWithAggregatesFilter
   description: StringWithAggregatesFilter
   id: StringWithAggregatesFilter
+  image: StringWithAggregatesFilter
   links: StringWithAggregatesFilter
   name: StringWithAggregatesFilter
   updatedAt: DateTimeWithAggregatesFilter
@@ -1386,6 +1408,7 @@ input ClubUpdateInput {
   description: StringFieldUpdateOperationsInput
   events: EventUpdateManyWithoutClubsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   notifications: NotificationUpdateManyWithoutCreatedByInput
@@ -1400,6 +1423,7 @@ input ClubUpdateManyMutationInput {
   deletedAt: NullableDateTimeFieldUpdateOperationsInput
   description: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -1507,6 +1531,7 @@ input ClubUpdateWithoutClubCoordinatorInput {
   description: StringFieldUpdateOperationsInput
   events: EventUpdateManyWithoutClubsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   notifications: NotificationUpdateManyWithoutCreatedByInput
@@ -1524,6 +1549,7 @@ input ClubUpdateWithoutClubMemberInput {
   description: StringFieldUpdateOperationsInput
   events: EventUpdateManyWithoutClubsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   notifications: NotificationUpdateManyWithoutCreatedByInput
@@ -1541,6 +1567,7 @@ input ClubUpdateWithoutClubRankInput {
   description: StringFieldUpdateOperationsInput
   events: EventUpdateManyWithoutClubsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   notifications: NotificationUpdateManyWithoutCreatedByInput
@@ -1558,6 +1585,7 @@ input ClubUpdateWithoutEventsInput {
   deletedAt: NullableDateTimeFieldUpdateOperationsInput
   description: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   notifications: NotificationUpdateManyWithoutCreatedByInput
@@ -1576,6 +1604,7 @@ input ClubUpdateWithoutNotificationsInput {
   description: StringFieldUpdateOperationsInput
   events: EventUpdateManyWithoutClubsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   otp: OTPUpdateOneWithoutClubInput
@@ -1593,6 +1622,7 @@ input ClubUpdateWithoutOtpInput {
   description: StringFieldUpdateOperationsInput
   events: EventUpdateManyWithoutClubsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   notifications: NotificationUpdateManyWithoutCreatedByInput
@@ -1610,6 +1640,7 @@ input ClubUpdateWithoutSubscriptionInput {
   description: StringFieldUpdateOperationsInput
   events: EventUpdateManyWithoutClubsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   notifications: NotificationUpdateManyWithoutCreatedByInput
@@ -1627,6 +1658,7 @@ input ClubUpdateWithoutTagsInput {
   description: StringFieldUpdateOperationsInput
   events: EventUpdateManyWithoutClubsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   notifications: NotificationUpdateManyWithoutCreatedByInput
@@ -1689,6 +1721,7 @@ input ClubWhereInput {
   description: StringFilter
   events: EventListRelationFilter
   id: StringFilter
+  image: StringFilter
   links: StringFilter
   name: StringFilter
   notifications: NotificationListRelationFilter
@@ -1771,6 +1804,7 @@ type Event {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String!
+  image: String!
   link: String
   name: String!
   postions(cursor: PositionWhereUniqueInput, distinct: [PositionScalarFieldEnum!], orderBy: [PositionOrderByWithRelationInput!], skip: Int, take: Int, where: PositionWhereInput): [Position!]!
@@ -1796,6 +1830,7 @@ type EventCountAggregate {
   eventEndDate: Int!
   eventStartDate: Int!
   id: Int!
+  image: Int!
   link: Int!
   name: Int!
   updatedAt: Int!
@@ -1810,6 +1845,7 @@ input EventCountOrderByAggregateInput {
   eventEndDate: SortOrder
   eventStartDate: SortOrder
   id: SortOrder
+  image: SortOrder
   link: SortOrder
   name: SortOrder
   updatedAt: SortOrder
@@ -1825,6 +1861,7 @@ input EventCreateInput {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String
+  image: String
   link: String
   name: String!
   postions: PositionCreateNestedManyWithoutEventInput
@@ -1886,6 +1923,7 @@ input EventCreateWithoutClubsInput {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String
+  image: String
   link: String
   name: String!
   postions: PositionCreateNestedManyWithoutEventInput
@@ -1904,6 +1942,7 @@ input EventCreateWithoutPostionsInput {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String
+  image: String
   link: String
   name: String!
   rsvpEvent: RSVPEventCreateNestedManyWithoutEventInput
@@ -1921,6 +1960,7 @@ input EventCreateWithoutRsvpEventInput {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String
+  image: String
   link: String
   name: String!
   postions: PositionCreateNestedManyWithoutEventInput
@@ -1938,6 +1978,7 @@ input EventCreateWithoutVotesInput {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String
+  image: String
   link: String
   name: String!
   postions: PositionCreateNestedManyWithoutEventInput
@@ -1957,6 +1998,7 @@ type EventGroupBy {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String!
+  image: String!
   link: String
   name: String!
   updatedAt: DateTime!
@@ -1977,6 +2019,7 @@ type EventMaxAggregate {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String
+  image: String
   link: String
   name: String
   updatedAt: DateTime
@@ -1991,6 +2034,7 @@ input EventMaxOrderByAggregateInput {
   eventEndDate: SortOrder
   eventStartDate: SortOrder
   id: SortOrder
+  image: SortOrder
   link: SortOrder
   name: SortOrder
   updatedAt: SortOrder
@@ -2005,6 +2049,7 @@ type EventMinAggregate {
   eventEndDate: DateTime
   eventStartDate: DateTime
   id: String
+  image: String
   link: String
   name: String
   updatedAt: DateTime
@@ -2019,6 +2064,7 @@ input EventMinOrderByAggregateInput {
   eventEndDate: SortOrder
   eventStartDate: SortOrder
   id: SortOrder
+  image: SortOrder
   link: SortOrder
   name: SortOrder
   updatedAt: SortOrder
@@ -2040,6 +2086,7 @@ input EventOrderByWithAggregationInput {
   eventEndDate: SortOrder
   eventStartDate: SortOrder
   id: SortOrder
+  image: SortOrder
   link: SortOrder
   name: SortOrder
   updatedAt: SortOrder
@@ -2055,6 +2102,7 @@ input EventOrderByWithRelationInput {
   eventEndDate: SortOrder
   eventStartDate: SortOrder
   id: SortOrder
+  image: SortOrder
   link: SortOrder
   name: SortOrder
   postions: PositionOrderByRelationAggregateInput
@@ -2077,6 +2125,7 @@ enum EventScalarFieldEnum {
   eventEndDate
   eventStartDate
   id
+  image
   link
   name
   updatedAt
@@ -2094,6 +2143,7 @@ input EventScalarWhereInput {
   eventEndDate: DateTimeNullableFilter
   eventStartDate: DateTimeNullableFilter
   id: StringFilter
+  image: StringFilter
   link: StringNullableFilter
   name: StringFilter
   updatedAt: DateTimeFilter
@@ -2111,6 +2161,7 @@ input EventScalarWhereWithAggregatesInput {
   eventEndDate: DateTimeNullableWithAggregatesFilter
   eventStartDate: DateTimeNullableWithAggregatesFilter
   id: StringWithAggregatesFilter
+  image: StringWithAggregatesFilter
   link: StringNullableWithAggregatesFilter
   name: StringWithAggregatesFilter
   updatedAt: DateTimeWithAggregatesFilter
@@ -2126,6 +2177,7 @@ input EventUpdateInput {
   eventEndDate: NullableDateTimeFieldUpdateOperationsInput
   eventStartDate: NullableDateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   link: NullableStringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   postions: PositionUpdateManyWithoutEventInput
@@ -2143,6 +2195,7 @@ input EventUpdateManyMutationInput {
   eventEndDate: NullableDateTimeFieldUpdateOperationsInput
   eventStartDate: NullableDateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   link: NullableStringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -2204,6 +2257,7 @@ input EventUpdateWithoutClubsInput {
   eventEndDate: NullableDateTimeFieldUpdateOperationsInput
   eventStartDate: NullableDateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   link: NullableStringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   postions: PositionUpdateManyWithoutEventInput
@@ -2222,6 +2276,7 @@ input EventUpdateWithoutPostionsInput {
   eventEndDate: NullableDateTimeFieldUpdateOperationsInput
   eventStartDate: NullableDateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   link: NullableStringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   rsvpEvent: RSVPEventUpdateManyWithoutEventInput
@@ -2239,6 +2294,7 @@ input EventUpdateWithoutRsvpEventInput {
   eventEndDate: NullableDateTimeFieldUpdateOperationsInput
   eventStartDate: NullableDateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   link: NullableStringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   postions: PositionUpdateManyWithoutEventInput
@@ -2256,6 +2312,7 @@ input EventUpdateWithoutVotesInput {
   eventEndDate: NullableDateTimeFieldUpdateOperationsInput
   eventStartDate: NullableDateTimeFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
   link: NullableStringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
   postions: PositionUpdateManyWithoutEventInput
@@ -2297,6 +2354,7 @@ input EventWhereInput {
   eventEndDate: DateTimeNullableFilter
   eventStartDate: DateTimeNullableFilter
   id: StringFilter
+  image: StringFilter
   link: StringNullableFilter
   name: StringFilter
   postions: PositionListRelationFilter
@@ -2308,6 +2366,11 @@ input EventWhereInput {
 
 input EventWhereUniqueInput {
   id: String
+}
+
+type Image {
+  data: String!
+  url: String!
 }
 
 input IntFieldUpdateOperationsInput {
@@ -2444,6 +2507,7 @@ type Mutation {
   updateTag(data: TagUpdateInput!, where: TagWhereUniqueInput!): Tag
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateVote(data: VoteUpdateInput!, where: VoteWhereUniqueInput!): Vote
+  upload(data: String!): Image!
   upsertClub(create: ClubCreateInput!, update: ClubUpdateInput!, where: ClubWhereUniqueInput!): Club!
   upsertClubCoordinator(create: ClubCoordinatorCreateInput!, update: ClubCoordinatorUpdateInput!, where: ClubCoordinatorWhereUniqueInput!): ClubCoordinator!
   upsertClubMember(create: ClubMemberCreateInput!, update: ClubMemberUpdateInput!, where: ClubMemberWhereUniqueInput!): ClubMember!

@@ -9,4 +9,8 @@ export default () => ({
     firebase: {
         db: process.env.FIREBASE_DB,
     },
+    imgur: {
+        clientId: process.env.IMGUR_CLIENT_ID,
+        url: process.env.IMGUR_URL,
+    },
 });
