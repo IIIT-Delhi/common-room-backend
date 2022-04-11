@@ -49,6 +49,13 @@ export class AuthService {
         };
     }
 
+    async me(user: any): Promise<any> {
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user;
+    }
+
     async logout(user: any): Promise<boolean> {
         if (!user) {
             throw new Error('User not found');

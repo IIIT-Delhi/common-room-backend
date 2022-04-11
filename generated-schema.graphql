@@ -3637,6 +3637,7 @@ type Query {
   groupByUser(by: [UserScalarFieldEnum!]!, having: UserScalarWhereWithAggregatesInput, orderBy: [UserOrderByWithAggregationInput!], skip: Int, take: Int, where: UserWhereInput): [UserGroupBy!]!
   groupByVote(by: [VoteScalarFieldEnum!]!, having: VoteScalarWhereWithAggregatesInput, orderBy: [VoteOrderByWithAggregationInput!], skip: Int, take: Int, where: VoteWhereInput): [VoteGroupBy!]!
   logout: Boolean!
+  me: User!
   notification(where: NotificationWhereUniqueInput!): Notification
   notifications(cursor: NotificationWhereUniqueInput, distinct: [NotificationScalarFieldEnum!], orderBy: [NotificationOrderByWithRelationInput!], skip: Int, take: Int, where: NotificationWhereInput): [Notification!]!
   oTP(where: OTPWhereUniqueInput!): OTP
