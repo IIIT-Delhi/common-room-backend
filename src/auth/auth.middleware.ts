@@ -2,7 +2,6 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MiddlewareFn, NextFn, ResolverData } from 'type-graphql';
 import config from '../config/configuration';
-import { PrismaService } from 'nestjs-prisma';
 
 export const authChecker: MiddlewareFn<any> = async (
     _context: ResolverData,
@@ -11,13 +10,14 @@ export const authChecker: MiddlewareFn<any> = async (
     const _config = config();
     const { context }: { context: any } = _context;
     const headers = context.req.headers;
+
     if (!headers.authorization) {
         throw new UnauthorizedException();
     }
     const jwtService = new JwtService({
         secret: _config.jwt,
     });
-    const prismaService = new PrismaService();
+    const prismaService = context.prisma;
     const token = headers.authorization;
     const user = await jwtService.verify(token);
     const prismaUser = await prismaService.user.findUnique({
