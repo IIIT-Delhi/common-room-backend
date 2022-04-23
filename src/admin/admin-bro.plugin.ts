@@ -1,50 +1,66 @@
 import { INestApplication } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { resolvers } from '@generated/type-graphql';
+import { ConfigService } from '@nestjs/config';
 import AdminJS from 'adminjs';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const AdminJSExpress = require('@adminjs/express');
-import { Database, Resource } from '@adminjs/prisma';
-import { DMMFClass } from '@prisma/client/runtime';
+import AdminJSExpress from '@adminjs/express';
+import AdminJSSequelize from '@adminjs/sequelize';
+import { Sequelize } from 'sequelize';
+import { initModels } from '../models/init-models';
 
-const resolverObjects = new Set();
+import adminConfig from '../config/admin.json';
 
-resolvers.forEach((resolver) => {
-    const resolverName = resolver.name
-        .replace('CrudResolver', '')
-        .replace('RelationsResolver', '');
+const verifyCredentials = (username: string, password: string) => {
+    const accounts = adminConfig.accounts;
+    const account = accounts.find((account) => account.username === username);
+    if (!account || account.password !== password) {
+        return false;
+    }
+    return {
+        email: account.username,
+    };
+};
 
-    resolverObjects.add(resolverName);
-});
-
-AdminJS.registerAdapter({ Database, Resource });
+AdminJS.registerAdapter(AdminJSSequelize);
 
 export async function setupAdminPanel(
     app: INestApplication,
-    prisma: PrismaClient,
+    configService: ConfigService,
 ): Promise<void> {
-    const dmmf = (prisma as any)._dmmf as DMMFClass;
-
-    const resources = [];
-
-    resolverObjects.forEach((resolverName: string) => {
-        resources.push({
-            resource: {
-                model: dmmf.modelMap[resolverName],
-                client: prisma,
-            },
-            options: {},
-        });
+    const sequelize = new Sequelize(configService.get<string>('database.uri'), {
+        logging: false,
     });
+    initModels(sequelize);
 
     /** Create adminBro instance */
     const adminJs = new AdminJS({
-        resources, // Here we will put resources
+        // resources, // Here we will put resources
+        databases: [sequelize],
         rootPath: '/admin', // Define path for the admin panel
+        branding: {
+            companyName: 'Common Room',
+            favicon: 'https://i.imgur.com/jlo3HKz.png',
+            logo: 'https://i.imgur.com/OLWxUbo.png',
+            softwareBrothers: false,
+        },
     });
 
     /** Create router */
-    const router = AdminJSExpress.buildRouter(adminJs);
+    const router = AdminJSExpress.buildAuthenticatedRouter(
+        adminJs,
+        {
+            authenticate: async (username, password) => {
+                return verifyCredentials(username, password);
+            },
+            cookiePassword: configService.get<string>('admin.secret'),
+            cookieName: 'common-room-admin',
+            maxRetries: 3,
+        },
+        null,
+        {
+            resave: false,
+            saveUninitialized: false,
+            secret: configService.get<string>('admin.secret'),
+        },
+    );
 
     /** Bind routing */
     app.use(adminJs.options.rootPath, router);

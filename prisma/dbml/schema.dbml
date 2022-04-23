@@ -3,19 +3,21 @@
 //// ------------------------------------------------------
 
 Table User {
-  email String [pk]
+  id Int [pk, increment]
+  email String [unique, not null]
   name String [not null]
   picture String [not null, default: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y']
   jwtToken String
+  expoToken String
   isOnBoarded Boolean [not null]
-  tags Tag [not null]
+  userTags UserTag [not null]
   clubCoordinator ClubCoordinator [not null]
   clubMember ClubMember [not null]
   subscription Subscription [not null]
   rsvpEvent RSVPEvent [not null]
   votes Vote [not null]
   positions Position [not null]
-  notifications Notification [not null]
+  userNotifications UserNotification [not null]
   studentRank StudentRank
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -23,16 +25,16 @@ Table User {
 }
 
 Table Club {
-  id String [pk]
+  id Int [pk, increment]
   name String [not null]
   description String [not null]
   links String [not null]
   image String [not null, default: 'https://www.gravatar.com/avatar/']
-  tags Tag [not null]
+  clubtags ClubTag [not null]
   clubCoordinator ClubCoordinator [not null]
   clubMember ClubMember [not null]
   subscription Subscription [not null]
-  events Event [not null]
+  clubEvents ClubEvent [not null]
   notifications Notification [not null]
   clubRank ClubRank
   otp OTP
@@ -42,7 +44,7 @@ Table Club {
 }
 
 Table Event {
-  id String [pk]
+  id Int [pk, increment]
   name String [not null]
   description String [not null]
   image String [not null, default: 'https://www.gravatar.com/avatar/']
@@ -54,165 +56,227 @@ Table Event {
   votes Vote [not null]
   rsvpEvent RSVPEvent [not null]
   postions Position [not null]
-  clubs Club [not null]
+  clubEvents ClubEvent [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deletedAt DateTime
 }
 
 Table Tag {
-  id String [pk]
+  id Int [pk, increment]
   name String [not null]
-  clubs Club [not null]
-  users User [not null]
+  clubTags ClubTag [not null]
+  userTags UserTag [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  deletedAt DateTime
 }
 
 Table Position {
-  id String [pk]
+  id Int [pk, increment]
   event Event [not null]
-  eventId String [not null]
+  eventId Int [not null]
   position String [not null]
   user User [not null]
-  userEmail String [not null]
+  userId Int [not null]
   money Int
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  deletedAt DateTime
 }
 
 Table StudentRank {
-  id String [pk]
+  id Int [pk, increment]
   user User [not null]
-  userEmail String [unique, not null]
+  userId Int [unique, not null]
   rank Int [not null]
   eventCount Int [not null]
   moneyEarned Int [not null]
   firstCount Int [not null]
   secondCount Int [not null]
   thirdCount Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
 }
 
 Table ClubRank {
-  id String [pk]
+  id Int [pk, increment]
   club Club [not null]
-  clubId String [unique, not null]
+  clubId Int [unique, not null]
   rank Int [not null]
   eventCount Int [not null]
   moneyAwarded Int [not null]
   rsvpCount Int [not null]
   upVoteCount Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
 }
 
 Table OTP {
-  id String [pk]
+  id Int [pk, increment]
   club Club [not null]
-  clubId String [unique, not null]
+  clubId Int [unique, not null]
   otp String [not null]
+  expiredAt DateTime [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  expiredAt DateTime [not null]
+  deletedAt DateTime
 }
 
 Table Notification {
-  id String [pk]
-  createdFor User [not null]
+  id Int [pk, increment]
+  userNotifications UserNotification [not null]
   createdBy Club [not null]
-  clubId String [unique, not null]
+  clubId Int [unique, not null]
   message String [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  deletedAt DateTime
 }
 
-Table ClubCoordinator {
+Table ClubEvent {
+  id Int [pk, increment]
   club Club [not null]
-  clubId String [not null]
-  user User [not null]
-  userEmail String [not null]
+  clubId Int [not null]
+  event Event [not null]
+  eventId Int [not null]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   deletedAt DateTime
 
   indexes {
-    (clubId, userEmail) [pk]
+    (clubId, eventId) [unique]
+  }
+}
+
+Table ClubTag {
+  id Int [pk, increment]
+  club Club [not null]
+  clubId Int [not null]
+  tag Tag [not null]
+  tagId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+
+  indexes {
+    (clubId, tagId) [unique]
+  }
+}
+
+Table UserTag {
+  id Int [pk, increment]
+  user User [not null]
+  userId Int [not null]
+  tag Tag [not null]
+  tagId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (userId, tagId) [unique]
+  }
+}
+
+Table UserNotification {
+  id Int [pk, increment]
+  notification Notification [not null]
+  notificationId Int [not null]
+  user User [not null]
+  userId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+
+  indexes {
+    (notificationId, userId) [unique]
+  }
+}
+
+Table ClubCoordinator {
+  id Int [pk, increment]
+  club Club [not null]
+  clubId Int [not null]
+  user User [not null]
+  userId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
+
+  indexes {
+    (clubId, userId) [unique]
   }
 }
 
 Table ClubMember {
+  id Int [pk, increment]
   club Club [not null]
-  clubId String [not null]
+  clubId Int [not null]
   user User [not null]
-  userEmail String [not null]
+  userId Int [not null]
   level Int [not null, default: 0]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   deletedAt DateTime
 
   indexes {
-    (clubId, userEmail) [pk]
+    (clubId, userId) [unique]
   }
 }
 
 Table Subscription {
+  id Int [pk, increment]
   club Club [not null]
-  clubId String [not null]
+  clubId Int [not null]
   user User [not null]
-  userEmail String [not null]
+  userId Int [not null]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
 
   indexes {
-    (clubId, userEmail) [pk]
+    (clubId, userId) [unique]
   }
 }
 
 Table RSVPEvent {
-  eventId String [not null]
+  id Int [pk, increment]
+  eventId Int [not null]
   event Event [not null]
-  userEmail String [not null]
+  userId Int [not null]
   user User [not null]
   createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   deletedAt DateTime
 
   indexes {
-    (eventId, userEmail) [pk]
+    (eventId, userId) [unique]
   }
 }
 
 Table Vote {
+  id Int [pk, increment]
   vote Boolean [not null]
-  eventId String [not null]
+  eventId Int [not null]
   event Event [not null]
-  userEmail String [not null]
+  userId Int [not null]
   user User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deletedAt DateTime
 
   indexes {
-    (eventId, userEmail) [pk]
+    (eventId, userId) [unique]
   }
-}
-
-Table TagToUser {
-  tagsId String [ref: > Tag.id]
-  usersId String [ref: > User.email]
-}
-
-Table NotificationToUser {
-  notificationsId String [ref: > Notification.id]
-  createdforId String [ref: > User.email]
-}
-
-Table ClubToTag {
-  tagsId String [ref: > Tag.id]
-  clubsId String [ref: > Club.id]
-}
-
-Table ClubToEvent {
-  eventsId String [ref: > Event.id]
-  clubsId String [ref: > Club.id]
 }
 
 Ref: Position.eventId > Event.id
 
-Ref: Position.userEmail > User.email
+Ref: Position.userId > User.id
 
-Ref: StudentRank.userEmail - User.email
+Ref: StudentRank.userId - User.id
 
 Ref: ClubRank.clubId - Club.id
 
@@ -220,22 +284,38 @@ Ref: OTP.clubId - Club.id
 
 Ref: Notification.clubId > Club.id
 
+Ref: ClubEvent.clubId > Club.id
+
+Ref: ClubEvent.eventId > Event.id
+
+Ref: ClubTag.clubId > Club.id
+
+Ref: ClubTag.tagId > Tag.id
+
+Ref: UserTag.userId > User.id
+
+Ref: UserTag.tagId > Tag.id
+
+Ref: UserNotification.notificationId > Notification.id
+
+Ref: UserNotification.userId > User.id
+
 Ref: ClubCoordinator.clubId > Club.id
 
-Ref: ClubCoordinator.userEmail > User.email
+Ref: ClubCoordinator.userId > User.id
 
 Ref: ClubMember.clubId > Club.id
 
-Ref: ClubMember.userEmail > User.email
+Ref: ClubMember.userId > User.id
 
 Ref: Subscription.clubId > Club.id
 
-Ref: Subscription.userEmail > User.email
+Ref: Subscription.userId > User.id
 
 Ref: RSVPEvent.eventId > Event.id
 
-Ref: RSVPEvent.userEmail > User.email
+Ref: RSVPEvent.userId > User.id
 
 Ref: Vote.eventId > Event.id
 
-Ref: Vote.userEmail > User.email
+Ref: Vote.userId > User.id
