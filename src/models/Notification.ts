@@ -61,7 +61,7 @@ export class Notification extends Model<NotificationAttributes, NotificationCrea
             unique: "Notification_clubId_fkey"
         },
         message: {
-            type: DataTypes.STRING(191),
+            type: DataTypes.TEXT,
             allowNull: false
         }
     }, {

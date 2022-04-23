@@ -124,11 +124,11 @@ export class Club extends Model<ClubAttributes, ClubCreationAttributes> implemen
             allowNull: false
         },
         description: {
-            type: DataTypes.STRING(191),
+            type: DataTypes.TEXT,
             allowNull: false
         },
         links: {
-            type: DataTypes.STRING(191),
+            type: DataTypes.TEXT,
             allowNull: false
         },
         image: {

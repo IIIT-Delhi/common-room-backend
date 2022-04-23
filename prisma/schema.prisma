@@ -25,10 +25,10 @@ datasource db {
 model User {
   id                Int                @id @default(autoincrement())
   email             String             @unique
-  name              String
+  name              String             
   picture           String             @default("https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y")
-  jwtToken          String?
-  expoToken         String?
+  jwtToken          String?            @db.MediumText
+  expoToken         String?            @db.MediumText
   isOnBoarded       Boolean
   userTags          UserTag[]
   clubCoordinator   ClubCoordinator[]
@@ -47,8 +47,8 @@ model User {
 model Club {
   id              Int               @id @default(autoincrement())
   name            String
-  description     String
-  links           String
+  description     String            @db.MediumText
+  links           String            @db.MediumText
   image           String            @default("https://www.gravatar.com/avatar/")
   clubtags        ClubTag[]
   clubCoordinator ClubCoordinator[]
@@ -66,9 +66,9 @@ model Club {
 model Event {
   id             Int         @id @default(autoincrement())
   name           String
-  description    String
+  description    String      @db.MediumText
   image          String      @default("https://www.gravatar.com/avatar/")
-  link           String?
+  link           String?     @db.MediumText
   deadline       DateTime?
   eventStartDate DateTime?
   eventEndDate   DateTime?
@@ -150,7 +150,7 @@ model Notification {
   userNotifications UserNotification[]
   createdBy         Club               @relation(fields: [clubId], references: [id])
   clubId            Int                @unique
-  message           String
+  message           String             @db.MediumText
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   deletedAt         DateTime?

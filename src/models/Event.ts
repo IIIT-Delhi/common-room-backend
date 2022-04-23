@@ -101,7 +101,7 @@ export class Event extends Model<EventAttributes, EventCreationAttributes> imple
             allowNull: false
         },
         description: {
-            type: DataTypes.STRING(191),
+            type: DataTypes.TEXT,
             allowNull: false
         },
         image: {
@@ -110,7 +110,7 @@ export class Event extends Model<EventAttributes, EventCreationAttributes> imple
             defaultValue: "https:\/\/www.gravatar.com\/avatar\/"
         },
         link: {
-            type: DataTypes.STRING(191),
+            type: DataTypes.TEXT,
             allowNull: true
         },
         deadline: {

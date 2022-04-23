@@ -31,7 +31,7 @@ export class AuthService {
             });
         }
 
-        const jwtToken = await this.jwt.sign({
+        const jwtToken = await this.jwt.signAsync({
             name: user.name,
             sub: user.email,
         });

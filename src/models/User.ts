@@ -165,11 +165,11 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
             defaultValue: "https:\/\/www.gravatar.com\/avatar\/00000000000000000000000000000000?d=mp&f=y"
         },
         jwtToken: {
-            type: DataTypes.STRING(191),
+            type: DataTypes.TEXT,
             allowNull: true
         },
         expoToken: {
-            type: DataTypes.STRING(191),
+            type: DataTypes.TEXT,
             allowNull: true
         },
         isOnBoarded: {
