@@ -34,6 +34,23 @@ export async function setupAdminPanel(
     const adminJs = new AdminJS({
         // resources, // Here we will put resources
         databases: [sequelize],
+        resources: [
+            {
+                resource: sequelize.models.User,
+                options: {
+                    properties: {
+                        jwtToken: {
+                            isVisible: {
+                                list: false,
+                                filter: false,
+                                show: false,
+                                edit: false,
+                            },
+                        },
+                    },
+                },
+            },
+        ],
         rootPath: '/admin', // Define path for the admin panel
         branding: {
             companyName: 'Common Room',

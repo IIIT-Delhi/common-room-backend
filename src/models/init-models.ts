@@ -35,8 +35,6 @@ import { UserTag as _UserTag } from "./UserTag";
 import type { UserTagAttributes, UserTagCreationAttributes } from "./UserTag";
 import { Vote as _Vote } from "./Vote";
 import type { VoteAttributes, VoteCreationAttributes } from "./Vote";
-import { _prisma_migrations as __prisma_migrations } from "./_prisma_migrations";
-import type { _prisma_migrationsAttributes, _prisma_migrationsCreationAttributes } from "./_prisma_migrations";
 
 export {
     _Club as Club,
@@ -57,7 +55,6 @@ export {
     _UserNotification as UserNotification,
     _UserTag as UserTag,
     _Vote as Vote,
-    __prisma_migrations as _prisma_migrations,
 };
 
 export type {
@@ -97,8 +94,6 @@ export type {
     UserTagCreationAttributes,
     VoteAttributes,
     VoteCreationAttributes,
-    _prisma_migrationsAttributes,
-    _prisma_migrationsCreationAttributes,
 };
 
 export function initModels(sequelize: Sequelize) {
@@ -120,7 +115,6 @@ export function initModels(sequelize: Sequelize) {
     const UserNotification = _UserNotification.initModel(sequelize);
     const UserTag = _UserTag.initModel(sequelize);
     const Vote = _Vote.initModel(sequelize);
-    const _prisma_migrations = __prisma_migrations.initModel(sequelize);
 
     ClubCoordinator.belongsTo(Club, { as: "club", foreignKey: "clubId"});
     Club.hasMany(ClubCoordinator, { as: "ClubCoordinators", foreignKey: "clubId"});
@@ -190,6 +184,5 @@ export function initModels(sequelize: Sequelize) {
         UserNotification: UserNotification,
         UserTag: UserTag,
         Vote: Vote,
-        _prisma_migrations: _prisma_migrations,
     };
 }

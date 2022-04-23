@@ -17,6 +17,7 @@ const sequelize_config: any = {
     useDefine: true,
     lang: 'ts',
     indentation: 4,
+    skipTables: ['_prisma_migrations'],
 };
 
 const auto = new SequelizeAuto(
