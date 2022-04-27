@@ -3,9 +3,9 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { ClubCoordinator, ClubCoordinatorId } from './ClubCoordinator';
 import type { ClubEvent, ClubEventId } from './ClubEvent';
 import type { ClubMember, ClubMemberId } from './ClubMember';
+import type { ClubNotification, ClubNotificationId } from './ClubNotification';
 import type { ClubRank, ClubRankCreationAttributes, ClubRankId } from './ClubRank';
 import type { ClubTag, ClubTagId } from './ClubTag';
-import type { Notification, NotificationCreationAttributes, NotificationId } from './Notification';
 import type { OTP, OTPCreationAttributes, OTPId } from './OTP';
 import type { Subscription, SubscriptionId } from './Subscription';
 
@@ -71,6 +71,18 @@ export class Club extends Model<ClubAttributes, ClubCreationAttributes> implemen
     hasClubMember!: Sequelize.HasManyHasAssociationMixin<ClubMember, ClubMemberId>;
     hasClubMembers!: Sequelize.HasManyHasAssociationsMixin<ClubMember, ClubMemberId>;
     countClubMembers!: Sequelize.HasManyCountAssociationsMixin;
+    // Club hasMany ClubNotification via clubId
+    ClubNotifications!: ClubNotification[];
+    getClubNotifications!: Sequelize.HasManyGetAssociationsMixin<ClubNotification>;
+    setClubNotifications!: Sequelize.HasManySetAssociationsMixin<ClubNotification, ClubNotificationId>;
+    addClubNotification!: Sequelize.HasManyAddAssociationMixin<ClubNotification, ClubNotificationId>;
+    addClubNotifications!: Sequelize.HasManyAddAssociationsMixin<ClubNotification, ClubNotificationId>;
+    createClubNotification!: Sequelize.HasManyCreateAssociationMixin<ClubNotification>;
+    removeClubNotification!: Sequelize.HasManyRemoveAssociationMixin<ClubNotification, ClubNotificationId>;
+    removeClubNotifications!: Sequelize.HasManyRemoveAssociationsMixin<ClubNotification, ClubNotificationId>;
+    hasClubNotification!: Sequelize.HasManyHasAssociationMixin<ClubNotification, ClubNotificationId>;
+    hasClubNotifications!: Sequelize.HasManyHasAssociationsMixin<ClubNotification, ClubNotificationId>;
+    countClubNotifications!: Sequelize.HasManyCountAssociationsMixin;
     // Club hasOne ClubRank via clubId
     ClubRank!: ClubRank;
     getClubRank!: Sequelize.HasOneGetAssociationMixin<ClubRank>;
@@ -88,11 +100,6 @@ export class Club extends Model<ClubAttributes, ClubCreationAttributes> implemen
     hasClubTag!: Sequelize.HasManyHasAssociationMixin<ClubTag, ClubTagId>;
     hasClubTags!: Sequelize.HasManyHasAssociationsMixin<ClubTag, ClubTagId>;
     countClubTags!: Sequelize.HasManyCountAssociationsMixin;
-    // Club hasOne Notification via clubId
-    Notification!: Notification;
-    getNotification!: Sequelize.HasOneGetAssociationMixin<Notification>;
-    setNotification!: Sequelize.HasOneSetAssociationMixin<Notification, NotificationId>;
-    createNotification!: Sequelize.HasOneCreateAssociationMixin<Notification>;
     // Club hasOne OTP via clubId
     OTP!: OTP;
     getOTP!: Sequelize.HasOneGetAssociationMixin<OTP>;

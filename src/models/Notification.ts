@@ -1,11 +1,10 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
-import type { Club, ClubId } from './Club';
+import type { ClubNotification, ClubNotificationId } from './ClubNotification';
 import type { UserNotification, UserNotificationId } from './UserNotification';
 
 export interface NotificationAttributes {
     id: number;
-    clubId: number;
     message: string;
     createdAt: Date;
     updatedAt: Date;
@@ -19,17 +18,23 @@ export type NotificationCreationAttributes = Optional<NotificationAttributes, No
 
 export class Notification extends Model<NotificationAttributes, NotificationCreationAttributes> implements NotificationAttributes {
     id!: number;
-    clubId!: number;
     message!: string;
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt?: Date;
 
-    // Notification belongsTo Club via clubId
-    club!: Club;
-    getClub!: Sequelize.BelongsToGetAssociationMixin<Club>;
-    setClub!: Sequelize.BelongsToSetAssociationMixin<Club, ClubId>;
-    createClub!: Sequelize.BelongsToCreateAssociationMixin<Club>;
+    // Notification hasMany ClubNotification via notificationId
+    ClubNotifications!: ClubNotification[];
+    getClubNotifications!: Sequelize.HasManyGetAssociationsMixin<ClubNotification>;
+    setClubNotifications!: Sequelize.HasManySetAssociationsMixin<ClubNotification, ClubNotificationId>;
+    addClubNotification!: Sequelize.HasManyAddAssociationMixin<ClubNotification, ClubNotificationId>;
+    addClubNotifications!: Sequelize.HasManyAddAssociationsMixin<ClubNotification, ClubNotificationId>;
+    createClubNotification!: Sequelize.HasManyCreateAssociationMixin<ClubNotification>;
+    removeClubNotification!: Sequelize.HasManyRemoveAssociationMixin<ClubNotification, ClubNotificationId>;
+    removeClubNotifications!: Sequelize.HasManyRemoveAssociationsMixin<ClubNotification, ClubNotificationId>;
+    hasClubNotification!: Sequelize.HasManyHasAssociationMixin<ClubNotification, ClubNotificationId>;
+    hasClubNotifications!: Sequelize.HasManyHasAssociationsMixin<ClubNotification, ClubNotificationId>;
+    countClubNotifications!: Sequelize.HasManyCountAssociationsMixin;
     // Notification hasMany UserNotification via notificationId
     UserNotifications!: UserNotification[];
     getUserNotifications!: Sequelize.HasManyGetAssociationsMixin<UserNotification>;
@@ -51,15 +56,6 @@ export class Notification extends Model<NotificationAttributes, NotificationCrea
             allowNull: false,
             primaryKey: true
         },
-        clubId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'Club',
-                key: 'id'
-            },
-            unique: "Notification_clubId_fkey"
-        },
         message: {
             type: DataTypes.TEXT,
             allowNull: false
@@ -75,14 +71,6 @@ export class Notification extends Model<NotificationAttributes, NotificationCrea
                 using: "BTREE",
                 fields: [
                     { name: "id" },
-                ]
-            },
-            {
-                name: "Notification_clubId_key",
-                unique: true,
-                using: "BTREE",
-                fields: [
-                    { name: "clubId" },
                 ]
             },
         ]

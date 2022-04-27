@@ -1,5 +1,6 @@
 import { Module, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeGraphQLModule } from 'typegraphql-nestjs';
@@ -16,6 +17,7 @@ import { UseMiddleware } from 'type-graphql';
 import { authChecker } from './auth/auth.middleware';
 
 import configuration from './config/configuration';
+import { NotificationsModule } from './notifications/notifications.module';
 
 const MyResolvers: Provider[] = [];
 
@@ -50,6 +52,7 @@ const playground = {
         PrismaModule.forRoot({
             isGlobal: true,
         }),
+        ScheduleModule.forRoot(),
         TypeGraphQLModule.forRootAsync({
             inject: [PrismaService, ConfigService],
             useFactory: async (
@@ -71,6 +74,7 @@ const playground = {
         }),
         AuthModule,
         ImageModule,
+        NotificationsModule,
     ],
     providers: [...MyResolvers, PrismaService, AppService, AppController],
 })

@@ -25,7 +25,7 @@ datasource db {
 model User {
   id                Int                @id @default(autoincrement())
   email             String             @unique
-  name              String             
+  name              String
   picture           String             @default("https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y")
   jwtToken          String?            @db.MediumText
   expoToken         String?            @db.MediumText
@@ -45,22 +45,22 @@ model User {
 }
 
 model Club {
-  id              Int               @id @default(autoincrement())
-  name            String
-  description     String            @db.MediumText
-  links           String            @db.MediumText
-  image           String            @default("https://www.gravatar.com/avatar/")
-  clubtags        ClubTag[]
-  clubCoordinator ClubCoordinator[]
-  clubMember      ClubMember[]
-  subscription    Subscription[]
-  clubEvents      ClubEvent[]
-  notifications   Notification[]
-  clubRank        ClubRank?
-  otp             OTP?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  deletedAt       DateTime?
+  id                Int                @id @default(autoincrement())
+  name              String
+  description       String             @db.MediumText
+  links             String             @db.MediumText
+  image             String             @default("https://www.gravatar.com/avatar/")
+  clubtags          ClubTag[]
+  clubCoordinator   ClubCoordinator[]
+  clubMember        ClubMember[]
+  subscription      Subscription[]
+  clubEvents        ClubEvent[]
+  clubNotifications ClubNotification[]
+  clubRank          ClubRank?
+  otp               OTP?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
 }
 
 model Event {
@@ -148,8 +148,7 @@ model OTP {
 model Notification {
   id                Int                @id @default(autoincrement())
   userNotifications UserNotification[]
-  createdBy         Club               @relation(fields: [clubId], references: [id])
-  clubId            Int                @unique
+  createdBy         ClubNotification[]
   message           String             @db.MediumText
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
@@ -157,6 +156,19 @@ model Notification {
 }
 
 // Defining Relation Mappings
+
+model ClubNotification {
+  id             Int          @id @default(autoincrement())
+  club           Club         @relation(fields: [clubId], references: [id])
+  clubId         Int
+  notification   Notification @relation(fields: [notificationId], references: [id])
+  notificationId Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+
+  @@unique([clubId, notificationId])
+}
 
 model ClubEvent {
   id        Int       @id @default(autoincrement())

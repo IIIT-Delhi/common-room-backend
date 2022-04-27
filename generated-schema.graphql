@@ -39,6 +39,14 @@ type AggregateClubMember {
   _sum: ClubMemberSumAggregate
 }
 
+type AggregateClubNotification {
+  _avg: ClubNotificationAvgAggregate
+  _count: ClubNotificationCountAggregate
+  _max: ClubNotificationMaxAggregate
+  _min: ClubNotificationMinAggregate
+  _sum: ClubNotificationSumAggregate
+}
+
 type AggregateClubRank {
   _avg: ClubRankAvgAggregate
   _count: ClubRankCountAggregate
@@ -178,6 +186,7 @@ type Club {
   clubCoordinator(cursor: ClubCoordinatorWhereUniqueInput, distinct: [ClubCoordinatorScalarFieldEnum!], orderBy: [ClubCoordinatorOrderByWithRelationInput!], skip: Int, take: Int, where: ClubCoordinatorWhereInput): [ClubCoordinator!]!
   clubEvents(cursor: ClubEventWhereUniqueInput, distinct: [ClubEventScalarFieldEnum!], orderBy: [ClubEventOrderByWithRelationInput!], skip: Int, take: Int, where: ClubEventWhereInput): [ClubEvent!]!
   clubMember(cursor: ClubMemberWhereUniqueInput, distinct: [ClubMemberScalarFieldEnum!], orderBy: [ClubMemberOrderByWithRelationInput!], skip: Int, take: Int, where: ClubMemberWhereInput): [ClubMember!]!
+  clubNotifications(cursor: ClubNotificationWhereUniqueInput, distinct: [ClubNotificationScalarFieldEnum!], orderBy: [ClubNotificationOrderByWithRelationInput!], skip: Int, take: Int, where: ClubNotificationWhereInput): [ClubNotification!]!
   clubRank: ClubRank
   clubtags(cursor: ClubTagWhereUniqueInput, distinct: [ClubTagScalarFieldEnum!], orderBy: [ClubTagOrderByWithRelationInput!], skip: Int, take: Int, where: ClubTagWhereInput): [ClubTag!]!
   createdAt: DateTime!
@@ -187,7 +196,6 @@ type Club {
   image: String!
   links: String!
   name: String!
-  notifications(cursor: NotificationWhereUniqueInput, distinct: [NotificationScalarFieldEnum!], orderBy: [NotificationOrderByWithRelationInput!], skip: Int, take: Int, where: NotificationWhereInput): [Notification!]!
   otp: OTP
   subscription(cursor: SubscriptionWhereUniqueInput, distinct: [SubscriptionScalarFieldEnum!], orderBy: [SubscriptionOrderByWithRelationInput!], skip: Int, take: Int, where: SubscriptionWhereInput): [Subscription!]!
   updatedAt: DateTime!
@@ -570,8 +578,8 @@ type ClubCount {
   clubCoordinator: Int!
   clubEvents: Int!
   clubMember: Int!
+  clubNotifications: Int!
   clubtags: Int!
-  notifications: Int!
   subscription: Int!
 }
 
@@ -602,6 +610,7 @@ input ClubCreateInput {
   clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
   clubEvents: ClubEventCreateNestedManyWithoutClubInput
   clubMember: ClubMemberCreateNestedManyWithoutClubInput
+  clubNotifications: ClubNotificationCreateNestedManyWithoutClubInput
   clubRank: ClubRankCreateNestedOneWithoutClubInput
   clubtags: ClubTagCreateNestedManyWithoutClubInput
   createdAt: DateTime
@@ -610,7 +619,6 @@ input ClubCreateInput {
   image: String
   links: String!
   name: String!
-  notifications: NotificationCreateNestedManyWithoutCreatedByInput
   otp: OTPCreateNestedOneWithoutClubInput
   subscription: SubscriptionCreateNestedManyWithoutClubInput
   updatedAt: DateTime
@@ -645,6 +653,12 @@ input ClubCreateNestedOneWithoutClubMemberInput {
   create: ClubCreateWithoutClubMemberInput
 }
 
+input ClubCreateNestedOneWithoutClubNotificationsInput {
+  connect: ClubWhereUniqueInput
+  connectOrCreate: ClubCreateOrConnectWithoutClubNotificationsInput
+  create: ClubCreateWithoutClubNotificationsInput
+}
+
 input ClubCreateNestedOneWithoutClubRankInput {
   connect: ClubWhereUniqueInput
   connectOrCreate: ClubCreateOrConnectWithoutClubRankInput
@@ -655,12 +669,6 @@ input ClubCreateNestedOneWithoutClubtagsInput {
   connect: ClubWhereUniqueInput
   connectOrCreate: ClubCreateOrConnectWithoutClubtagsInput
   create: ClubCreateWithoutClubtagsInput
-}
-
-input ClubCreateNestedOneWithoutNotificationsInput {
-  connect: ClubWhereUniqueInput
-  connectOrCreate: ClubCreateOrConnectWithoutNotificationsInput
-  create: ClubCreateWithoutNotificationsInput
 }
 
 input ClubCreateNestedOneWithoutOtpInput {
@@ -690,6 +698,11 @@ input ClubCreateOrConnectWithoutClubMemberInput {
   where: ClubWhereUniqueInput!
 }
 
+input ClubCreateOrConnectWithoutClubNotificationsInput {
+  create: ClubCreateWithoutClubNotificationsInput!
+  where: ClubWhereUniqueInput!
+}
+
 input ClubCreateOrConnectWithoutClubRankInput {
   create: ClubCreateWithoutClubRankInput!
   where: ClubWhereUniqueInput!
@@ -697,11 +710,6 @@ input ClubCreateOrConnectWithoutClubRankInput {
 
 input ClubCreateOrConnectWithoutClubtagsInput {
   create: ClubCreateWithoutClubtagsInput!
-  where: ClubWhereUniqueInput!
-}
-
-input ClubCreateOrConnectWithoutNotificationsInput {
-  create: ClubCreateWithoutNotificationsInput!
   where: ClubWhereUniqueInput!
 }
 
@@ -718,6 +726,7 @@ input ClubCreateOrConnectWithoutSubscriptionInput {
 input ClubCreateWithoutClubCoordinatorInput {
   clubEvents: ClubEventCreateNestedManyWithoutClubInput
   clubMember: ClubMemberCreateNestedManyWithoutClubInput
+  clubNotifications: ClubNotificationCreateNestedManyWithoutClubInput
   clubRank: ClubRankCreateNestedOneWithoutClubInput
   clubtags: ClubTagCreateNestedManyWithoutClubInput
   createdAt: DateTime
@@ -726,7 +735,6 @@ input ClubCreateWithoutClubCoordinatorInput {
   image: String
   links: String!
   name: String!
-  notifications: NotificationCreateNestedManyWithoutCreatedByInput
   otp: OTPCreateNestedOneWithoutClubInput
   subscription: SubscriptionCreateNestedManyWithoutClubInput
   updatedAt: DateTime
@@ -734,6 +742,41 @@ input ClubCreateWithoutClubCoordinatorInput {
 
 input ClubCreateWithoutClubEventsInput {
   clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
+  clubMember: ClubMemberCreateNestedManyWithoutClubInput
+  clubNotifications: ClubNotificationCreateNestedManyWithoutClubInput
+  clubRank: ClubRankCreateNestedOneWithoutClubInput
+  clubtags: ClubTagCreateNestedManyWithoutClubInput
+  createdAt: DateTime
+  deletedAt: DateTime
+  description: String!
+  image: String
+  links: String!
+  name: String!
+  otp: OTPCreateNestedOneWithoutClubInput
+  subscription: SubscriptionCreateNestedManyWithoutClubInput
+  updatedAt: DateTime
+}
+
+input ClubCreateWithoutClubMemberInput {
+  clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
+  clubEvents: ClubEventCreateNestedManyWithoutClubInput
+  clubNotifications: ClubNotificationCreateNestedManyWithoutClubInput
+  clubRank: ClubRankCreateNestedOneWithoutClubInput
+  clubtags: ClubTagCreateNestedManyWithoutClubInput
+  createdAt: DateTime
+  deletedAt: DateTime
+  description: String!
+  image: String
+  links: String!
+  name: String!
+  otp: OTPCreateNestedOneWithoutClubInput
+  subscription: SubscriptionCreateNestedManyWithoutClubInput
+  updatedAt: DateTime
+}
+
+input ClubCreateWithoutClubNotificationsInput {
+  clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
+  clubEvents: ClubEventCreateNestedManyWithoutClubInput
   clubMember: ClubMemberCreateNestedManyWithoutClubInput
   clubRank: ClubRankCreateNestedOneWithoutClubInput
   clubtags: ClubTagCreateNestedManyWithoutClubInput
@@ -743,24 +786,6 @@ input ClubCreateWithoutClubEventsInput {
   image: String
   links: String!
   name: String!
-  notifications: NotificationCreateNestedManyWithoutCreatedByInput
-  otp: OTPCreateNestedOneWithoutClubInput
-  subscription: SubscriptionCreateNestedManyWithoutClubInput
-  updatedAt: DateTime
-}
-
-input ClubCreateWithoutClubMemberInput {
-  clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
-  clubEvents: ClubEventCreateNestedManyWithoutClubInput
-  clubRank: ClubRankCreateNestedOneWithoutClubInput
-  clubtags: ClubTagCreateNestedManyWithoutClubInput
-  createdAt: DateTime
-  deletedAt: DateTime
-  description: String!
-  image: String
-  links: String!
-  name: String!
-  notifications: NotificationCreateNestedManyWithoutCreatedByInput
   otp: OTPCreateNestedOneWithoutClubInput
   subscription: SubscriptionCreateNestedManyWithoutClubInput
   updatedAt: DateTime
@@ -770,6 +795,7 @@ input ClubCreateWithoutClubRankInput {
   clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
   clubEvents: ClubEventCreateNestedManyWithoutClubInput
   clubMember: ClubMemberCreateNestedManyWithoutClubInput
+  clubNotifications: ClubNotificationCreateNestedManyWithoutClubInput
   clubtags: ClubTagCreateNestedManyWithoutClubInput
   createdAt: DateTime
   deletedAt: DateTime
@@ -777,7 +803,6 @@ input ClubCreateWithoutClubRankInput {
   image: String
   links: String!
   name: String!
-  notifications: NotificationCreateNestedManyWithoutCreatedByInput
   otp: OTPCreateNestedOneWithoutClubInput
   subscription: SubscriptionCreateNestedManyWithoutClubInput
   updatedAt: DateTime
@@ -787,25 +812,8 @@ input ClubCreateWithoutClubtagsInput {
   clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
   clubEvents: ClubEventCreateNestedManyWithoutClubInput
   clubMember: ClubMemberCreateNestedManyWithoutClubInput
+  clubNotifications: ClubNotificationCreateNestedManyWithoutClubInput
   clubRank: ClubRankCreateNestedOneWithoutClubInput
-  createdAt: DateTime
-  deletedAt: DateTime
-  description: String!
-  image: String
-  links: String!
-  name: String!
-  notifications: NotificationCreateNestedManyWithoutCreatedByInput
-  otp: OTPCreateNestedOneWithoutClubInput
-  subscription: SubscriptionCreateNestedManyWithoutClubInput
-  updatedAt: DateTime
-}
-
-input ClubCreateWithoutNotificationsInput {
-  clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
-  clubEvents: ClubEventCreateNestedManyWithoutClubInput
-  clubMember: ClubMemberCreateNestedManyWithoutClubInput
-  clubRank: ClubRankCreateNestedOneWithoutClubInput
-  clubtags: ClubTagCreateNestedManyWithoutClubInput
   createdAt: DateTime
   deletedAt: DateTime
   description: String!
@@ -821,6 +829,7 @@ input ClubCreateWithoutOtpInput {
   clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
   clubEvents: ClubEventCreateNestedManyWithoutClubInput
   clubMember: ClubMemberCreateNestedManyWithoutClubInput
+  clubNotifications: ClubNotificationCreateNestedManyWithoutClubInput
   clubRank: ClubRankCreateNestedOneWithoutClubInput
   clubtags: ClubTagCreateNestedManyWithoutClubInput
   createdAt: DateTime
@@ -829,7 +838,6 @@ input ClubCreateWithoutOtpInput {
   image: String
   links: String!
   name: String!
-  notifications: NotificationCreateNestedManyWithoutCreatedByInput
   subscription: SubscriptionCreateNestedManyWithoutClubInput
   updatedAt: DateTime
 }
@@ -838,6 +846,7 @@ input ClubCreateWithoutSubscriptionInput {
   clubCoordinator: ClubCoordinatorCreateNestedManyWithoutClubInput
   clubEvents: ClubEventCreateNestedManyWithoutClubInput
   clubMember: ClubMemberCreateNestedManyWithoutClubInput
+  clubNotifications: ClubNotificationCreateNestedManyWithoutClubInput
   clubRank: ClubRankCreateNestedOneWithoutClubInput
   clubtags: ClubTagCreateNestedManyWithoutClubInput
   createdAt: DateTime
@@ -846,7 +855,6 @@ input ClubCreateWithoutSubscriptionInput {
   image: String
   links: String!
   name: String!
-  notifications: NotificationCreateNestedManyWithoutCreatedByInput
   otp: OTPCreateNestedOneWithoutClubInput
   updatedAt: DateTime
 }
@@ -1669,6 +1677,371 @@ input ClubMinOrderByAggregateInput {
   updatedAt: SortOrder
 }
 
+type ClubNotification {
+  club: Club!
+  clubId: Int!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: Int!
+  notification: Notification!
+  notificationId: Int!
+  updatedAt: DateTime!
+}
+
+type ClubNotificationAvgAggregate {
+  clubId: Float
+  id: Float
+  notificationId: Float
+}
+
+input ClubNotificationAvgOrderByAggregateInput {
+  clubId: SortOrder
+  id: SortOrder
+  notificationId: SortOrder
+}
+
+input ClubNotificationClubIdNotificationIdCompoundUniqueInput {
+  clubId: Int!
+  notificationId: Int!
+}
+
+type ClubNotificationCountAggregate {
+  _all: Int!
+  clubId: Int!
+  createdAt: Int!
+  deletedAt: Int!
+  id: Int!
+  notificationId: Int!
+  updatedAt: Int!
+}
+
+input ClubNotificationCountOrderByAggregateInput {
+  clubId: SortOrder
+  createdAt: SortOrder
+  deletedAt: SortOrder
+  id: SortOrder
+  notificationId: SortOrder
+  updatedAt: SortOrder
+}
+
+input ClubNotificationCreateInput {
+  club: ClubCreateNestedOneWithoutClubNotificationsInput!
+  createdAt: DateTime
+  deletedAt: DateTime
+  notification: NotificationCreateNestedOneWithoutCreatedByInput!
+  updatedAt: DateTime
+}
+
+input ClubNotificationCreateManyClubInput {
+  createdAt: DateTime
+  deletedAt: DateTime
+  id: Int
+  notificationId: Int!
+  updatedAt: DateTime
+}
+
+input ClubNotificationCreateManyClubInputEnvelope {
+  data: [ClubNotificationCreateManyClubInput!]!
+  skipDuplicates: Boolean
+}
+
+input ClubNotificationCreateManyInput {
+  clubId: Int!
+  createdAt: DateTime
+  deletedAt: DateTime
+  id: Int
+  notificationId: Int!
+  updatedAt: DateTime
+}
+
+input ClubNotificationCreateManyNotificationInput {
+  clubId: Int!
+  createdAt: DateTime
+  deletedAt: DateTime
+  id: Int
+  updatedAt: DateTime
+}
+
+input ClubNotificationCreateManyNotificationInputEnvelope {
+  data: [ClubNotificationCreateManyNotificationInput!]!
+  skipDuplicates: Boolean
+}
+
+input ClubNotificationCreateNestedManyWithoutClubInput {
+  connect: [ClubNotificationWhereUniqueInput!]
+  connectOrCreate: [ClubNotificationCreateOrConnectWithoutClubInput!]
+  create: [ClubNotificationCreateWithoutClubInput!]
+  createMany: ClubNotificationCreateManyClubInputEnvelope
+}
+
+input ClubNotificationCreateNestedManyWithoutNotificationInput {
+  connect: [ClubNotificationWhereUniqueInput!]
+  connectOrCreate: [ClubNotificationCreateOrConnectWithoutNotificationInput!]
+  create: [ClubNotificationCreateWithoutNotificationInput!]
+  createMany: ClubNotificationCreateManyNotificationInputEnvelope
+}
+
+input ClubNotificationCreateOrConnectWithoutClubInput {
+  create: ClubNotificationCreateWithoutClubInput!
+  where: ClubNotificationWhereUniqueInput!
+}
+
+input ClubNotificationCreateOrConnectWithoutNotificationInput {
+  create: ClubNotificationCreateWithoutNotificationInput!
+  where: ClubNotificationWhereUniqueInput!
+}
+
+input ClubNotificationCreateWithoutClubInput {
+  createdAt: DateTime
+  deletedAt: DateTime
+  notification: NotificationCreateNestedOneWithoutCreatedByInput!
+  updatedAt: DateTime
+}
+
+input ClubNotificationCreateWithoutNotificationInput {
+  club: ClubCreateNestedOneWithoutClubNotificationsInput!
+  createdAt: DateTime
+  deletedAt: DateTime
+  updatedAt: DateTime
+}
+
+type ClubNotificationGroupBy {
+  _avg: ClubNotificationAvgAggregate
+  _count: ClubNotificationCountAggregate
+  _max: ClubNotificationMaxAggregate
+  _min: ClubNotificationMinAggregate
+  _sum: ClubNotificationSumAggregate
+  clubId: Int!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  id: Int!
+  notificationId: Int!
+  updatedAt: DateTime!
+}
+
+input ClubNotificationListRelationFilter {
+  every: ClubNotificationWhereInput
+  none: ClubNotificationWhereInput
+  some: ClubNotificationWhereInput
+}
+
+type ClubNotificationMaxAggregate {
+  clubId: Int
+  createdAt: DateTime
+  deletedAt: DateTime
+  id: Int
+  notificationId: Int
+  updatedAt: DateTime
+}
+
+input ClubNotificationMaxOrderByAggregateInput {
+  clubId: SortOrder
+  createdAt: SortOrder
+  deletedAt: SortOrder
+  id: SortOrder
+  notificationId: SortOrder
+  updatedAt: SortOrder
+}
+
+type ClubNotificationMinAggregate {
+  clubId: Int
+  createdAt: DateTime
+  deletedAt: DateTime
+  id: Int
+  notificationId: Int
+  updatedAt: DateTime
+}
+
+input ClubNotificationMinOrderByAggregateInput {
+  clubId: SortOrder
+  createdAt: SortOrder
+  deletedAt: SortOrder
+  id: SortOrder
+  notificationId: SortOrder
+  updatedAt: SortOrder
+}
+
+input ClubNotificationOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input ClubNotificationOrderByWithAggregationInput {
+  _avg: ClubNotificationAvgOrderByAggregateInput
+  _count: ClubNotificationCountOrderByAggregateInput
+  _max: ClubNotificationMaxOrderByAggregateInput
+  _min: ClubNotificationMinOrderByAggregateInput
+  _sum: ClubNotificationSumOrderByAggregateInput
+  clubId: SortOrder
+  createdAt: SortOrder
+  deletedAt: SortOrder
+  id: SortOrder
+  notificationId: SortOrder
+  updatedAt: SortOrder
+}
+
+input ClubNotificationOrderByWithRelationInput {
+  club: ClubOrderByWithRelationInput
+  clubId: SortOrder
+  createdAt: SortOrder
+  deletedAt: SortOrder
+  id: SortOrder
+  notification: NotificationOrderByWithRelationInput
+  notificationId: SortOrder
+  updatedAt: SortOrder
+}
+
+enum ClubNotificationScalarFieldEnum {
+  clubId
+  createdAt
+  deletedAt
+  id
+  notificationId
+  updatedAt
+}
+
+input ClubNotificationScalarWhereInput {
+  AND: [ClubNotificationScalarWhereInput!]
+  NOT: [ClubNotificationScalarWhereInput!]
+  OR: [ClubNotificationScalarWhereInput!]
+  clubId: IntFilter
+  createdAt: DateTimeFilter
+  deletedAt: DateTimeNullableFilter
+  id: IntFilter
+  notificationId: IntFilter
+  updatedAt: DateTimeFilter
+}
+
+input ClubNotificationScalarWhereWithAggregatesInput {
+  AND: [ClubNotificationScalarWhereWithAggregatesInput!]
+  NOT: [ClubNotificationScalarWhereWithAggregatesInput!]
+  OR: [ClubNotificationScalarWhereWithAggregatesInput!]
+  clubId: IntWithAggregatesFilter
+  createdAt: DateTimeWithAggregatesFilter
+  deletedAt: DateTimeNullableWithAggregatesFilter
+  id: IntWithAggregatesFilter
+  notificationId: IntWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+}
+
+type ClubNotificationSumAggregate {
+  clubId: Int
+  id: Int
+  notificationId: Int
+}
+
+input ClubNotificationSumOrderByAggregateInput {
+  clubId: SortOrder
+  id: SortOrder
+  notificationId: SortOrder
+}
+
+input ClubNotificationUpdateInput {
+  club: ClubUpdateOneRequiredWithoutClubNotificationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  notification: NotificationUpdateOneRequiredWithoutCreatedByInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input ClubNotificationUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input ClubNotificationUpdateManyWithWhereWithoutClubInput {
+  data: ClubNotificationUpdateManyMutationInput!
+  where: ClubNotificationScalarWhereInput!
+}
+
+input ClubNotificationUpdateManyWithWhereWithoutNotificationInput {
+  data: ClubNotificationUpdateManyMutationInput!
+  where: ClubNotificationScalarWhereInput!
+}
+
+input ClubNotificationUpdateManyWithoutClubInput {
+  connect: [ClubNotificationWhereUniqueInput!]
+  connectOrCreate: [ClubNotificationCreateOrConnectWithoutClubInput!]
+  create: [ClubNotificationCreateWithoutClubInput!]
+  createMany: ClubNotificationCreateManyClubInputEnvelope
+  delete: [ClubNotificationWhereUniqueInput!]
+  deleteMany: [ClubNotificationScalarWhereInput!]
+  disconnect: [ClubNotificationWhereUniqueInput!]
+  set: [ClubNotificationWhereUniqueInput!]
+  update: [ClubNotificationUpdateWithWhereUniqueWithoutClubInput!]
+  updateMany: [ClubNotificationUpdateManyWithWhereWithoutClubInput!]
+  upsert: [ClubNotificationUpsertWithWhereUniqueWithoutClubInput!]
+}
+
+input ClubNotificationUpdateManyWithoutNotificationInput {
+  connect: [ClubNotificationWhereUniqueInput!]
+  connectOrCreate: [ClubNotificationCreateOrConnectWithoutNotificationInput!]
+  create: [ClubNotificationCreateWithoutNotificationInput!]
+  createMany: ClubNotificationCreateManyNotificationInputEnvelope
+  delete: [ClubNotificationWhereUniqueInput!]
+  deleteMany: [ClubNotificationScalarWhereInput!]
+  disconnect: [ClubNotificationWhereUniqueInput!]
+  set: [ClubNotificationWhereUniqueInput!]
+  update: [ClubNotificationUpdateWithWhereUniqueWithoutNotificationInput!]
+  updateMany: [ClubNotificationUpdateManyWithWhereWithoutNotificationInput!]
+  upsert: [ClubNotificationUpsertWithWhereUniqueWithoutNotificationInput!]
+}
+
+input ClubNotificationUpdateWithWhereUniqueWithoutClubInput {
+  data: ClubNotificationUpdateWithoutClubInput!
+  where: ClubNotificationWhereUniqueInput!
+}
+
+input ClubNotificationUpdateWithWhereUniqueWithoutNotificationInput {
+  data: ClubNotificationUpdateWithoutNotificationInput!
+  where: ClubNotificationWhereUniqueInput!
+}
+
+input ClubNotificationUpdateWithoutClubInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  notification: NotificationUpdateOneRequiredWithoutCreatedByInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input ClubNotificationUpdateWithoutNotificationInput {
+  club: ClubUpdateOneRequiredWithoutClubNotificationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input ClubNotificationUpsertWithWhereUniqueWithoutClubInput {
+  create: ClubNotificationCreateWithoutClubInput!
+  update: ClubNotificationUpdateWithoutClubInput!
+  where: ClubNotificationWhereUniqueInput!
+}
+
+input ClubNotificationUpsertWithWhereUniqueWithoutNotificationInput {
+  create: ClubNotificationCreateWithoutNotificationInput!
+  update: ClubNotificationUpdateWithoutNotificationInput!
+  where: ClubNotificationWhereUniqueInput!
+}
+
+input ClubNotificationWhereInput {
+  AND: [ClubNotificationWhereInput!]
+  NOT: [ClubNotificationWhereInput!]
+  OR: [ClubNotificationWhereInput!]
+  club: ClubRelationFilter
+  clubId: IntFilter
+  createdAt: DateTimeFilter
+  deletedAt: DateTimeNullableFilter
+  id: IntFilter
+  notification: NotificationRelationFilter
+  notificationId: IntFilter
+  updatedAt: DateTimeFilter
+}
+
+input ClubNotificationWhereUniqueInput {
+  clubId_notificationId: ClubNotificationClubIdNotificationIdCompoundUniqueInput
+  id: Int
+}
+
 input ClubOrderByWithAggregationInput {
   _avg: ClubAvgOrderByAggregateInput
   _count: ClubCountOrderByAggregateInput
@@ -1689,6 +2062,7 @@ input ClubOrderByWithRelationInput {
   clubCoordinator: ClubCoordinatorOrderByRelationAggregateInput
   clubEvents: ClubEventOrderByRelationAggregateInput
   clubMember: ClubMemberOrderByRelationAggregateInput
+  clubNotifications: ClubNotificationOrderByRelationAggregateInput
   clubRank: ClubRankOrderByWithRelationInput
   clubtags: ClubTagOrderByRelationAggregateInput
   createdAt: SortOrder
@@ -1698,7 +2072,6 @@ input ClubOrderByWithRelationInput {
   image: SortOrder
   links: SortOrder
   name: SortOrder
-  notifications: NotificationOrderByRelationAggregateInput
   otp: OTPOrderByWithRelationInput
   subscription: SubscriptionOrderByRelationAggregateInput
   updatedAt: SortOrder
@@ -2446,6 +2819,7 @@ input ClubUpdateInput {
   clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
   clubEvents: ClubEventUpdateManyWithoutClubInput
   clubMember: ClubMemberUpdateManyWithoutClubInput
+  clubNotifications: ClubNotificationUpdateManyWithoutClubInput
   clubRank: ClubRankUpdateOneWithoutClubInput
   clubtags: ClubTagUpdateManyWithoutClubInput
   createdAt: DateTimeFieldUpdateOperationsInput
@@ -2454,7 +2828,6 @@ input ClubUpdateInput {
   image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  notifications: NotificationUpdateManyWithoutCreatedByInput
   otp: OTPUpdateOneWithoutClubInput
   subscription: SubscriptionUpdateManyWithoutClubInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -2494,6 +2867,14 @@ input ClubUpdateOneRequiredWithoutClubMemberInput {
   upsert: ClubUpsertWithoutClubMemberInput
 }
 
+input ClubUpdateOneRequiredWithoutClubNotificationsInput {
+  connect: ClubWhereUniqueInput
+  connectOrCreate: ClubCreateOrConnectWithoutClubNotificationsInput
+  create: ClubCreateWithoutClubNotificationsInput
+  update: ClubUpdateWithoutClubNotificationsInput
+  upsert: ClubUpsertWithoutClubNotificationsInput
+}
+
 input ClubUpdateOneRequiredWithoutClubRankInput {
   connect: ClubWhereUniqueInput
   connectOrCreate: ClubCreateOrConnectWithoutClubRankInput
@@ -2508,14 +2889,6 @@ input ClubUpdateOneRequiredWithoutClubtagsInput {
   create: ClubCreateWithoutClubtagsInput
   update: ClubUpdateWithoutClubtagsInput
   upsert: ClubUpsertWithoutClubtagsInput
-}
-
-input ClubUpdateOneRequiredWithoutNotificationsInput {
-  connect: ClubWhereUniqueInput
-  connectOrCreate: ClubCreateOrConnectWithoutNotificationsInput
-  create: ClubCreateWithoutNotificationsInput
-  update: ClubUpdateWithoutNotificationsInput
-  upsert: ClubUpsertWithoutNotificationsInput
 }
 
 input ClubUpdateOneRequiredWithoutOtpInput {
@@ -2537,6 +2910,7 @@ input ClubUpdateOneRequiredWithoutSubscriptionInput {
 input ClubUpdateWithoutClubCoordinatorInput {
   clubEvents: ClubEventUpdateManyWithoutClubInput
   clubMember: ClubMemberUpdateManyWithoutClubInput
+  clubNotifications: ClubNotificationUpdateManyWithoutClubInput
   clubRank: ClubRankUpdateOneWithoutClubInput
   clubtags: ClubTagUpdateManyWithoutClubInput
   createdAt: DateTimeFieldUpdateOperationsInput
@@ -2545,7 +2919,6 @@ input ClubUpdateWithoutClubCoordinatorInput {
   image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  notifications: NotificationUpdateManyWithoutCreatedByInput
   otp: OTPUpdateOneWithoutClubInput
   subscription: SubscriptionUpdateManyWithoutClubInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -2553,6 +2926,41 @@ input ClubUpdateWithoutClubCoordinatorInput {
 
 input ClubUpdateWithoutClubEventsInput {
   clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
+  clubMember: ClubMemberUpdateManyWithoutClubInput
+  clubNotifications: ClubNotificationUpdateManyWithoutClubInput
+  clubRank: ClubRankUpdateOneWithoutClubInput
+  clubtags: ClubTagUpdateManyWithoutClubInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  description: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  links: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  otp: OTPUpdateOneWithoutClubInput
+  subscription: SubscriptionUpdateManyWithoutClubInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input ClubUpdateWithoutClubMemberInput {
+  clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
+  clubEvents: ClubEventUpdateManyWithoutClubInput
+  clubNotifications: ClubNotificationUpdateManyWithoutClubInput
+  clubRank: ClubRankUpdateOneWithoutClubInput
+  clubtags: ClubTagUpdateManyWithoutClubInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  description: StringFieldUpdateOperationsInput
+  image: StringFieldUpdateOperationsInput
+  links: StringFieldUpdateOperationsInput
+  name: StringFieldUpdateOperationsInput
+  otp: OTPUpdateOneWithoutClubInput
+  subscription: SubscriptionUpdateManyWithoutClubInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input ClubUpdateWithoutClubNotificationsInput {
+  clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
+  clubEvents: ClubEventUpdateManyWithoutClubInput
   clubMember: ClubMemberUpdateManyWithoutClubInput
   clubRank: ClubRankUpdateOneWithoutClubInput
   clubtags: ClubTagUpdateManyWithoutClubInput
@@ -2562,24 +2970,6 @@ input ClubUpdateWithoutClubEventsInput {
   image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  notifications: NotificationUpdateManyWithoutCreatedByInput
-  otp: OTPUpdateOneWithoutClubInput
-  subscription: SubscriptionUpdateManyWithoutClubInput
-  updatedAt: DateTimeFieldUpdateOperationsInput
-}
-
-input ClubUpdateWithoutClubMemberInput {
-  clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
-  clubEvents: ClubEventUpdateManyWithoutClubInput
-  clubRank: ClubRankUpdateOneWithoutClubInput
-  clubtags: ClubTagUpdateManyWithoutClubInput
-  createdAt: DateTimeFieldUpdateOperationsInput
-  deletedAt: NullableDateTimeFieldUpdateOperationsInput
-  description: StringFieldUpdateOperationsInput
-  image: StringFieldUpdateOperationsInput
-  links: StringFieldUpdateOperationsInput
-  name: StringFieldUpdateOperationsInput
-  notifications: NotificationUpdateManyWithoutCreatedByInput
   otp: OTPUpdateOneWithoutClubInput
   subscription: SubscriptionUpdateManyWithoutClubInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -2589,6 +2979,7 @@ input ClubUpdateWithoutClubRankInput {
   clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
   clubEvents: ClubEventUpdateManyWithoutClubInput
   clubMember: ClubMemberUpdateManyWithoutClubInput
+  clubNotifications: ClubNotificationUpdateManyWithoutClubInput
   clubtags: ClubTagUpdateManyWithoutClubInput
   createdAt: DateTimeFieldUpdateOperationsInput
   deletedAt: NullableDateTimeFieldUpdateOperationsInput
@@ -2596,7 +2987,6 @@ input ClubUpdateWithoutClubRankInput {
   image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  notifications: NotificationUpdateManyWithoutCreatedByInput
   otp: OTPUpdateOneWithoutClubInput
   subscription: SubscriptionUpdateManyWithoutClubInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -2606,25 +2996,8 @@ input ClubUpdateWithoutClubtagsInput {
   clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
   clubEvents: ClubEventUpdateManyWithoutClubInput
   clubMember: ClubMemberUpdateManyWithoutClubInput
+  clubNotifications: ClubNotificationUpdateManyWithoutClubInput
   clubRank: ClubRankUpdateOneWithoutClubInput
-  createdAt: DateTimeFieldUpdateOperationsInput
-  deletedAt: NullableDateTimeFieldUpdateOperationsInput
-  description: StringFieldUpdateOperationsInput
-  image: StringFieldUpdateOperationsInput
-  links: StringFieldUpdateOperationsInput
-  name: StringFieldUpdateOperationsInput
-  notifications: NotificationUpdateManyWithoutCreatedByInput
-  otp: OTPUpdateOneWithoutClubInput
-  subscription: SubscriptionUpdateManyWithoutClubInput
-  updatedAt: DateTimeFieldUpdateOperationsInput
-}
-
-input ClubUpdateWithoutNotificationsInput {
-  clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
-  clubEvents: ClubEventUpdateManyWithoutClubInput
-  clubMember: ClubMemberUpdateManyWithoutClubInput
-  clubRank: ClubRankUpdateOneWithoutClubInput
-  clubtags: ClubTagUpdateManyWithoutClubInput
   createdAt: DateTimeFieldUpdateOperationsInput
   deletedAt: NullableDateTimeFieldUpdateOperationsInput
   description: StringFieldUpdateOperationsInput
@@ -2640,6 +3013,7 @@ input ClubUpdateWithoutOtpInput {
   clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
   clubEvents: ClubEventUpdateManyWithoutClubInput
   clubMember: ClubMemberUpdateManyWithoutClubInput
+  clubNotifications: ClubNotificationUpdateManyWithoutClubInput
   clubRank: ClubRankUpdateOneWithoutClubInput
   clubtags: ClubTagUpdateManyWithoutClubInput
   createdAt: DateTimeFieldUpdateOperationsInput
@@ -2648,7 +3022,6 @@ input ClubUpdateWithoutOtpInput {
   image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  notifications: NotificationUpdateManyWithoutCreatedByInput
   subscription: SubscriptionUpdateManyWithoutClubInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
@@ -2657,6 +3030,7 @@ input ClubUpdateWithoutSubscriptionInput {
   clubCoordinator: ClubCoordinatorUpdateManyWithoutClubInput
   clubEvents: ClubEventUpdateManyWithoutClubInput
   clubMember: ClubMemberUpdateManyWithoutClubInput
+  clubNotifications: ClubNotificationUpdateManyWithoutClubInput
   clubRank: ClubRankUpdateOneWithoutClubInput
   clubtags: ClubTagUpdateManyWithoutClubInput
   createdAt: DateTimeFieldUpdateOperationsInput
@@ -2665,7 +3039,6 @@ input ClubUpdateWithoutSubscriptionInput {
   image: StringFieldUpdateOperationsInput
   links: StringFieldUpdateOperationsInput
   name: StringFieldUpdateOperationsInput
-  notifications: NotificationUpdateManyWithoutCreatedByInput
   otp: OTPUpdateOneWithoutClubInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
@@ -2685,6 +3058,11 @@ input ClubUpsertWithoutClubMemberInput {
   update: ClubUpdateWithoutClubMemberInput!
 }
 
+input ClubUpsertWithoutClubNotificationsInput {
+  create: ClubCreateWithoutClubNotificationsInput!
+  update: ClubUpdateWithoutClubNotificationsInput!
+}
+
 input ClubUpsertWithoutClubRankInput {
   create: ClubCreateWithoutClubRankInput!
   update: ClubUpdateWithoutClubRankInput!
@@ -2693,11 +3071,6 @@ input ClubUpsertWithoutClubRankInput {
 input ClubUpsertWithoutClubtagsInput {
   create: ClubCreateWithoutClubtagsInput!
   update: ClubUpdateWithoutClubtagsInput!
-}
-
-input ClubUpsertWithoutNotificationsInput {
-  create: ClubCreateWithoutNotificationsInput!
-  update: ClubUpdateWithoutNotificationsInput!
 }
 
 input ClubUpsertWithoutOtpInput {
@@ -2717,6 +3090,7 @@ input ClubWhereInput {
   clubCoordinator: ClubCoordinatorListRelationFilter
   clubEvents: ClubEventListRelationFilter
   clubMember: ClubMemberListRelationFilter
+  clubNotifications: ClubNotificationListRelationFilter
   clubRank: ClubRankRelationFilter
   clubtags: ClubTagListRelationFilter
   createdAt: DateTimeFilter
@@ -2726,7 +3100,6 @@ input ClubWhereInput {
   image: StringFilter
   links: StringFilter
   name: StringFilter
-  notifications: NotificationListRelationFilter
   otp: OTPRelationFilter
   subscription: SubscriptionListRelationFilter
   updatedAt: DateTimeFilter
@@ -3421,6 +3794,7 @@ type Mutation {
   createClubCoordinator(data: ClubCoordinatorCreateInput!): ClubCoordinator!
   createClubEvent(data: ClubEventCreateInput!): ClubEvent!
   createClubMember(data: ClubMemberCreateInput!): ClubMember!
+  createClubNotification(data: ClubNotificationCreateInput!): ClubNotification!
   createClubRank(data: ClubRankCreateInput!): ClubRank!
   createClubTag(data: ClubTagCreateInput!): ClubTag!
   createEvent(data: EventCreateInput!): Event!
@@ -3428,6 +3802,7 @@ type Mutation {
   createManyClubCoordinator(data: [ClubCoordinatorCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyClubEvent(data: [ClubEventCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyClubMember(data: [ClubMemberCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyClubNotification(data: [ClubNotificationCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyClubRank(data: [ClubRankCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyClubTag(data: [ClubTagCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyEvent(data: [EventCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
@@ -3457,6 +3832,7 @@ type Mutation {
   deleteClubCoordinator(where: ClubCoordinatorWhereUniqueInput!): ClubCoordinator
   deleteClubEvent(where: ClubEventWhereUniqueInput!): ClubEvent
   deleteClubMember(where: ClubMemberWhereUniqueInput!): ClubMember
+  deleteClubNotification(where: ClubNotificationWhereUniqueInput!): ClubNotification
   deleteClubRank(where: ClubRankWhereUniqueInput!): ClubRank
   deleteClubTag(where: ClubTagWhereUniqueInput!): ClubTag
   deleteEvent(where: EventWhereUniqueInput!): Event
@@ -3464,6 +3840,7 @@ type Mutation {
   deleteManyClubCoordinator(where: ClubCoordinatorWhereInput): AffectedRowsOutput!
   deleteManyClubEvent(where: ClubEventWhereInput): AffectedRowsOutput!
   deleteManyClubMember(where: ClubMemberWhereInput): AffectedRowsOutput!
+  deleteManyClubNotification(where: ClubNotificationWhereInput): AffectedRowsOutput!
   deleteManyClubRank(where: ClubRankWhereInput): AffectedRowsOutput!
   deleteManyClubTag(where: ClubTagWhereInput): AffectedRowsOutput!
   deleteManyEvent(where: EventWhereInput): AffectedRowsOutput!
@@ -3494,6 +3871,7 @@ type Mutation {
   updateClubCoordinator(data: ClubCoordinatorUpdateInput!, where: ClubCoordinatorWhereUniqueInput!): ClubCoordinator
   updateClubEvent(data: ClubEventUpdateInput!, where: ClubEventWhereUniqueInput!): ClubEvent
   updateClubMember(data: ClubMemberUpdateInput!, where: ClubMemberWhereUniqueInput!): ClubMember
+  updateClubNotification(data: ClubNotificationUpdateInput!, where: ClubNotificationWhereUniqueInput!): ClubNotification
   updateClubRank(data: ClubRankUpdateInput!, where: ClubRankWhereUniqueInput!): ClubRank
   updateClubTag(data: ClubTagUpdateInput!, where: ClubTagWhereUniqueInput!): ClubTag
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
@@ -3501,6 +3879,7 @@ type Mutation {
   updateManyClubCoordinator(data: ClubCoordinatorUpdateManyMutationInput!, where: ClubCoordinatorWhereInput): AffectedRowsOutput!
   updateManyClubEvent(data: ClubEventUpdateManyMutationInput!, where: ClubEventWhereInput): AffectedRowsOutput!
   updateManyClubMember(data: ClubMemberUpdateManyMutationInput!, where: ClubMemberWhereInput): AffectedRowsOutput!
+  updateManyClubNotification(data: ClubNotificationUpdateManyMutationInput!, where: ClubNotificationWhereInput): AffectedRowsOutput!
   updateManyClubRank(data: ClubRankUpdateManyMutationInput!, where: ClubRankWhereInput): AffectedRowsOutput!
   updateManyClubTag(data: ClubTagUpdateManyMutationInput!, where: ClubTagWhereInput): AffectedRowsOutput!
   updateManyEvent(data: EventUpdateManyMutationInput!, where: EventWhereInput): AffectedRowsOutput!
@@ -3531,6 +3910,7 @@ type Mutation {
   upsertClubCoordinator(create: ClubCoordinatorCreateInput!, update: ClubCoordinatorUpdateInput!, where: ClubCoordinatorWhereUniqueInput!): ClubCoordinator!
   upsertClubEvent(create: ClubEventCreateInput!, update: ClubEventUpdateInput!, where: ClubEventWhereUniqueInput!): ClubEvent!
   upsertClubMember(create: ClubMemberCreateInput!, update: ClubMemberUpdateInput!, where: ClubMemberWhereUniqueInput!): ClubMember!
+  upsertClubNotification(create: ClubNotificationCreateInput!, update: ClubNotificationUpdateInput!, where: ClubNotificationWhereUniqueInput!): ClubNotification!
   upsertClubRank(create: ClubRankCreateInput!, update: ClubRankUpdateInput!, where: ClubRankWhereUniqueInput!): ClubRank!
   upsertClubTag(create: ClubTagCreateInput!, update: ClubTagUpdateInput!, where: ClubTagWhereUniqueInput!): ClubTag!
   upsertEvent(create: EventCreateInput!, update: EventUpdateInput!, where: EventWhereUniqueInput!): Event!
@@ -3750,9 +4130,8 @@ input NestedStringWithAggregatesFilter {
 
 type Notification {
   _count: NotificationCount
-  clubId: Int!
   createdAt: DateTime!
-  createdBy: Club!
+  createdBy(cursor: ClubNotificationWhereUniqueInput, distinct: [ClubNotificationScalarFieldEnum!], orderBy: [ClubNotificationOrderByWithRelationInput!], skip: Int, take: Int, where: ClubNotificationWhereInput): [ClubNotification!]!
   deletedAt: DateTime
   id: Int!
   message: String!
@@ -3761,22 +4140,20 @@ type Notification {
 }
 
 type NotificationAvgAggregate {
-  clubId: Float
   id: Float
 }
 
 input NotificationAvgOrderByAggregateInput {
-  clubId: SortOrder
   id: SortOrder
 }
 
 type NotificationCount {
+  createdBy: Int!
   userNotifications: Int!
 }
 
 type NotificationCountAggregate {
   _all: Int!
-  clubId: Int!
   createdAt: Int!
   deletedAt: Int!
   id: Int!
@@ -3785,7 +4162,6 @@ type NotificationCountAggregate {
 }
 
 input NotificationCountOrderByAggregateInput {
-  clubId: SortOrder
   createdAt: SortOrder
   deletedAt: SortOrder
   id: SortOrder
@@ -3795,28 +4171,14 @@ input NotificationCountOrderByAggregateInput {
 
 input NotificationCreateInput {
   createdAt: DateTime
-  createdBy: ClubCreateNestedOneWithoutNotificationsInput!
+  createdBy: ClubNotificationCreateNestedManyWithoutNotificationInput
   deletedAt: DateTime
   message: String!
   updatedAt: DateTime
   userNotifications: UserNotificationCreateNestedManyWithoutNotificationInput
 }
 
-input NotificationCreateManyCreatedByInput {
-  createdAt: DateTime
-  deletedAt: DateTime
-  id: Int
-  message: String!
-  updatedAt: DateTime
-}
-
-input NotificationCreateManyCreatedByInputEnvelope {
-  data: [NotificationCreateManyCreatedByInput!]!
-  skipDuplicates: Boolean
-}
-
 input NotificationCreateManyInput {
-  clubId: Int!
   createdAt: DateTime
   deletedAt: DateTime
   id: Int
@@ -3824,11 +4186,10 @@ input NotificationCreateManyInput {
   updatedAt: DateTime
 }
 
-input NotificationCreateNestedManyWithoutCreatedByInput {
-  connect: [NotificationWhereUniqueInput!]
-  connectOrCreate: [NotificationCreateOrConnectWithoutCreatedByInput!]
-  create: [NotificationCreateWithoutCreatedByInput!]
-  createMany: NotificationCreateManyCreatedByInputEnvelope
+input NotificationCreateNestedOneWithoutCreatedByInput {
+  connect: NotificationWhereUniqueInput
+  connectOrCreate: NotificationCreateOrConnectWithoutCreatedByInput
+  create: NotificationCreateWithoutCreatedByInput
 }
 
 input NotificationCreateNestedOneWithoutUserNotificationsInput {
@@ -3857,7 +4218,7 @@ input NotificationCreateWithoutCreatedByInput {
 
 input NotificationCreateWithoutUserNotificationsInput {
   createdAt: DateTime
-  createdBy: ClubCreateNestedOneWithoutNotificationsInput!
+  createdBy: ClubNotificationCreateNestedManyWithoutNotificationInput
   deletedAt: DateTime
   message: String!
   updatedAt: DateTime
@@ -3869,7 +4230,6 @@ type NotificationGroupBy {
   _max: NotificationMaxAggregate
   _min: NotificationMinAggregate
   _sum: NotificationSumAggregate
-  clubId: Int!
   createdAt: DateTime!
   deletedAt: DateTime
   id: Int!
@@ -3877,14 +4237,7 @@ type NotificationGroupBy {
   updatedAt: DateTime!
 }
 
-input NotificationListRelationFilter {
-  every: NotificationWhereInput
-  none: NotificationWhereInput
-  some: NotificationWhereInput
-}
-
 type NotificationMaxAggregate {
-  clubId: Int
   createdAt: DateTime
   deletedAt: DateTime
   id: Int
@@ -3893,7 +4246,6 @@ type NotificationMaxAggregate {
 }
 
 input NotificationMaxOrderByAggregateInput {
-  clubId: SortOrder
   createdAt: SortOrder
   deletedAt: SortOrder
   id: SortOrder
@@ -3902,7 +4254,6 @@ input NotificationMaxOrderByAggregateInput {
 }
 
 type NotificationMinAggregate {
-  clubId: Int
   createdAt: DateTime
   deletedAt: DateTime
   id: Int
@@ -3911,16 +4262,11 @@ type NotificationMinAggregate {
 }
 
 input NotificationMinOrderByAggregateInput {
-  clubId: SortOrder
   createdAt: SortOrder
   deletedAt: SortOrder
   id: SortOrder
   message: SortOrder
   updatedAt: SortOrder
-}
-
-input NotificationOrderByRelationAggregateInput {
-  _count: SortOrder
 }
 
 input NotificationOrderByWithAggregationInput {
@@ -3929,7 +4275,6 @@ input NotificationOrderByWithAggregationInput {
   _max: NotificationMaxOrderByAggregateInput
   _min: NotificationMinOrderByAggregateInput
   _sum: NotificationSumOrderByAggregateInput
-  clubId: SortOrder
   createdAt: SortOrder
   deletedAt: SortOrder
   id: SortOrder
@@ -3938,9 +4283,8 @@ input NotificationOrderByWithAggregationInput {
 }
 
 input NotificationOrderByWithRelationInput {
-  clubId: SortOrder
   createdAt: SortOrder
-  createdBy: ClubOrderByWithRelationInput
+  createdBy: ClubNotificationOrderByRelationAggregateInput
   deletedAt: SortOrder
   id: SortOrder
   message: SortOrder
@@ -3954,7 +4298,6 @@ input NotificationRelationFilter {
 }
 
 enum NotificationScalarFieldEnum {
-  clubId
   createdAt
   deletedAt
   id
@@ -3962,23 +4305,10 @@ enum NotificationScalarFieldEnum {
   updatedAt
 }
 
-input NotificationScalarWhereInput {
-  AND: [NotificationScalarWhereInput!]
-  NOT: [NotificationScalarWhereInput!]
-  OR: [NotificationScalarWhereInput!]
-  clubId: IntFilter
-  createdAt: DateTimeFilter
-  deletedAt: DateTimeNullableFilter
-  id: IntFilter
-  message: StringFilter
-  updatedAt: DateTimeFilter
-}
-
 input NotificationScalarWhereWithAggregatesInput {
   AND: [NotificationScalarWhereWithAggregatesInput!]
   NOT: [NotificationScalarWhereWithAggregatesInput!]
   OR: [NotificationScalarWhereWithAggregatesInput!]
-  clubId: IntWithAggregatesFilter
   createdAt: DateTimeWithAggregatesFilter
   deletedAt: DateTimeNullableWithAggregatesFilter
   id: IntWithAggregatesFilter
@@ -3987,18 +4317,16 @@ input NotificationScalarWhereWithAggregatesInput {
 }
 
 type NotificationSumAggregate {
-  clubId: Int
   id: Int
 }
 
 input NotificationSumOrderByAggregateInput {
-  clubId: SortOrder
   id: SortOrder
 }
 
 input NotificationUpdateInput {
   createdAt: DateTimeFieldUpdateOperationsInput
-  createdBy: ClubUpdateOneRequiredWithoutNotificationsInput
+  createdBy: ClubNotificationUpdateManyWithoutNotificationInput
   deletedAt: NullableDateTimeFieldUpdateOperationsInput
   message: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -4012,23 +4340,12 @@ input NotificationUpdateManyMutationInput {
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input NotificationUpdateManyWithWhereWithoutCreatedByInput {
-  data: NotificationUpdateManyMutationInput!
-  where: NotificationScalarWhereInput!
-}
-
-input NotificationUpdateManyWithoutCreatedByInput {
-  connect: [NotificationWhereUniqueInput!]
-  connectOrCreate: [NotificationCreateOrConnectWithoutCreatedByInput!]
-  create: [NotificationCreateWithoutCreatedByInput!]
-  createMany: NotificationCreateManyCreatedByInputEnvelope
-  delete: [NotificationWhereUniqueInput!]
-  deleteMany: [NotificationScalarWhereInput!]
-  disconnect: [NotificationWhereUniqueInput!]
-  set: [NotificationWhereUniqueInput!]
-  update: [NotificationUpdateWithWhereUniqueWithoutCreatedByInput!]
-  updateMany: [NotificationUpdateManyWithWhereWithoutCreatedByInput!]
-  upsert: [NotificationUpsertWithWhereUniqueWithoutCreatedByInput!]
+input NotificationUpdateOneRequiredWithoutCreatedByInput {
+  connect: NotificationWhereUniqueInput
+  connectOrCreate: NotificationCreateOrConnectWithoutCreatedByInput
+  create: NotificationCreateWithoutCreatedByInput
+  update: NotificationUpdateWithoutCreatedByInput
+  upsert: NotificationUpsertWithoutCreatedByInput
 }
 
 input NotificationUpdateOneRequiredWithoutUserNotificationsInput {
@@ -4037,11 +4354,6 @@ input NotificationUpdateOneRequiredWithoutUserNotificationsInput {
   create: NotificationCreateWithoutUserNotificationsInput
   update: NotificationUpdateWithoutUserNotificationsInput
   upsert: NotificationUpsertWithoutUserNotificationsInput
-}
-
-input NotificationUpdateWithWhereUniqueWithoutCreatedByInput {
-  data: NotificationUpdateWithoutCreatedByInput!
-  where: NotificationWhereUniqueInput!
 }
 
 input NotificationUpdateWithoutCreatedByInput {
@@ -4054,16 +4366,15 @@ input NotificationUpdateWithoutCreatedByInput {
 
 input NotificationUpdateWithoutUserNotificationsInput {
   createdAt: DateTimeFieldUpdateOperationsInput
-  createdBy: ClubUpdateOneRequiredWithoutNotificationsInput
+  createdBy: ClubNotificationUpdateManyWithoutNotificationInput
   deletedAt: NullableDateTimeFieldUpdateOperationsInput
   message: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
-input NotificationUpsertWithWhereUniqueWithoutCreatedByInput {
+input NotificationUpsertWithoutCreatedByInput {
   create: NotificationCreateWithoutCreatedByInput!
   update: NotificationUpdateWithoutCreatedByInput!
-  where: NotificationWhereUniqueInput!
 }
 
 input NotificationUpsertWithoutUserNotificationsInput {
@@ -4075,9 +4386,8 @@ input NotificationWhereInput {
   AND: [NotificationWhereInput!]
   NOT: [NotificationWhereInput!]
   OR: [NotificationWhereInput!]
-  clubId: IntFilter
   createdAt: DateTimeFilter
-  createdBy: ClubRelationFilter
+  createdBy: ClubNotificationListRelationFilter
   deletedAt: DateTimeNullableFilter
   id: IntFilter
   message: StringFilter
@@ -4086,7 +4396,6 @@ input NotificationWhereInput {
 }
 
 input NotificationWhereUniqueInput {
-  clubId: Int
   id: Int
 }
 
@@ -4780,6 +5089,7 @@ type Query {
   aggregateClubCoordinator(cursor: ClubCoordinatorWhereUniqueInput, orderBy: [ClubCoordinatorOrderByWithRelationInput!], skip: Int, take: Int, where: ClubCoordinatorWhereInput): AggregateClubCoordinator!
   aggregateClubEvent(cursor: ClubEventWhereUniqueInput, orderBy: [ClubEventOrderByWithRelationInput!], skip: Int, take: Int, where: ClubEventWhereInput): AggregateClubEvent!
   aggregateClubMember(cursor: ClubMemberWhereUniqueInput, orderBy: [ClubMemberOrderByWithRelationInput!], skip: Int, take: Int, where: ClubMemberWhereInput): AggregateClubMember!
+  aggregateClubNotification(cursor: ClubNotificationWhereUniqueInput, orderBy: [ClubNotificationOrderByWithRelationInput!], skip: Int, take: Int, where: ClubNotificationWhereInput): AggregateClubNotification!
   aggregateClubRank(cursor: ClubRankWhereUniqueInput, orderBy: [ClubRankOrderByWithRelationInput!], skip: Int, take: Int, where: ClubRankWhereInput): AggregateClubRank!
   aggregateClubTag(cursor: ClubTagWhereUniqueInput, orderBy: [ClubTagOrderByWithRelationInput!], skip: Int, take: Int, where: ClubTagWhereInput): AggregateClubTag!
   aggregateEvent(cursor: EventWhereUniqueInput, orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): AggregateEvent!
@@ -4801,6 +5111,8 @@ type Query {
   clubEvents(cursor: ClubEventWhereUniqueInput, distinct: [ClubEventScalarFieldEnum!], orderBy: [ClubEventOrderByWithRelationInput!], skip: Int, take: Int, where: ClubEventWhereInput): [ClubEvent!]!
   clubMember(where: ClubMemberWhereUniqueInput!): ClubMember
   clubMembers(cursor: ClubMemberWhereUniqueInput, distinct: [ClubMemberScalarFieldEnum!], orderBy: [ClubMemberOrderByWithRelationInput!], skip: Int, take: Int, where: ClubMemberWhereInput): [ClubMember!]!
+  clubNotification(where: ClubNotificationWhereUniqueInput!): ClubNotification
+  clubNotifications(cursor: ClubNotificationWhereUniqueInput, distinct: [ClubNotificationScalarFieldEnum!], orderBy: [ClubNotificationOrderByWithRelationInput!], skip: Int, take: Int, where: ClubNotificationWhereInput): [ClubNotification!]!
   clubRank(where: ClubRankWhereUniqueInput!): ClubRank
   clubRanks(cursor: ClubRankWhereUniqueInput, distinct: [ClubRankScalarFieldEnum!], orderBy: [ClubRankOrderByWithRelationInput!], skip: Int, take: Int, where: ClubRankWhereInput): [ClubRank!]!
   clubTag(where: ClubTagWhereUniqueInput!): ClubTag
@@ -4812,6 +5124,7 @@ type Query {
   findFirstClubCoordinator(cursor: ClubCoordinatorWhereUniqueInput, distinct: [ClubCoordinatorScalarFieldEnum!], orderBy: [ClubCoordinatorOrderByWithRelationInput!], skip: Int, take: Int, where: ClubCoordinatorWhereInput): ClubCoordinator
   findFirstClubEvent(cursor: ClubEventWhereUniqueInput, distinct: [ClubEventScalarFieldEnum!], orderBy: [ClubEventOrderByWithRelationInput!], skip: Int, take: Int, where: ClubEventWhereInput): ClubEvent
   findFirstClubMember(cursor: ClubMemberWhereUniqueInput, distinct: [ClubMemberScalarFieldEnum!], orderBy: [ClubMemberOrderByWithRelationInput!], skip: Int, take: Int, where: ClubMemberWhereInput): ClubMember
+  findFirstClubNotification(cursor: ClubNotificationWhereUniqueInput, distinct: [ClubNotificationScalarFieldEnum!], orderBy: [ClubNotificationOrderByWithRelationInput!], skip: Int, take: Int, where: ClubNotificationWhereInput): ClubNotification
   findFirstClubRank(cursor: ClubRankWhereUniqueInput, distinct: [ClubRankScalarFieldEnum!], orderBy: [ClubRankOrderByWithRelationInput!], skip: Int, take: Int, where: ClubRankWhereInput): ClubRank
   findFirstClubTag(cursor: ClubTagWhereUniqueInput, distinct: [ClubTagScalarFieldEnum!], orderBy: [ClubTagOrderByWithRelationInput!], skip: Int, take: Int, where: ClubTagWhereInput): ClubTag
   findFirstEvent(cursor: EventWhereUniqueInput, distinct: [EventScalarFieldEnum!], orderBy: [EventOrderByWithRelationInput!], skip: Int, take: Int, where: EventWhereInput): Event
@@ -4830,6 +5143,7 @@ type Query {
   groupByClubCoordinator(by: [ClubCoordinatorScalarFieldEnum!]!, having: ClubCoordinatorScalarWhereWithAggregatesInput, orderBy: [ClubCoordinatorOrderByWithAggregationInput!], skip: Int, take: Int, where: ClubCoordinatorWhereInput): [ClubCoordinatorGroupBy!]!
   groupByClubEvent(by: [ClubEventScalarFieldEnum!]!, having: ClubEventScalarWhereWithAggregatesInput, orderBy: [ClubEventOrderByWithAggregationInput!], skip: Int, take: Int, where: ClubEventWhereInput): [ClubEventGroupBy!]!
   groupByClubMember(by: [ClubMemberScalarFieldEnum!]!, having: ClubMemberScalarWhereWithAggregatesInput, orderBy: [ClubMemberOrderByWithAggregationInput!], skip: Int, take: Int, where: ClubMemberWhereInput): [ClubMemberGroupBy!]!
+  groupByClubNotification(by: [ClubNotificationScalarFieldEnum!]!, having: ClubNotificationScalarWhereWithAggregatesInput, orderBy: [ClubNotificationOrderByWithAggregationInput!], skip: Int, take: Int, where: ClubNotificationWhereInput): [ClubNotificationGroupBy!]!
   groupByClubRank(by: [ClubRankScalarFieldEnum!]!, having: ClubRankScalarWhereWithAggregatesInput, orderBy: [ClubRankOrderByWithAggregationInput!], skip: Int, take: Int, where: ClubRankWhereInput): [ClubRankGroupBy!]!
   groupByClubTag(by: [ClubTagScalarFieldEnum!]!, having: ClubTagScalarWhereWithAggregatesInput, orderBy: [ClubTagOrderByWithAggregationInput!], skip: Int, take: Int, where: ClubTagWhereInput): [ClubTagGroupBy!]!
   groupByEvent(by: [EventScalarFieldEnum!]!, having: EventScalarWhereWithAggregatesInput, orderBy: [EventOrderByWithAggregationInput!], skip: Int, take: Int, where: EventWhereInput): [EventGroupBy!]!

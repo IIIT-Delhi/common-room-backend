@@ -7,6 +7,8 @@ import { ClubEvent as _ClubEvent } from "./ClubEvent";
 import type { ClubEventAttributes, ClubEventCreationAttributes } from "./ClubEvent";
 import { ClubMember as _ClubMember } from "./ClubMember";
 import type { ClubMemberAttributes, ClubMemberCreationAttributes } from "./ClubMember";
+import { ClubNotification as _ClubNotification } from "./ClubNotification";
+import type { ClubNotificationAttributes, ClubNotificationCreationAttributes } from "./ClubNotification";
 import { ClubRank as _ClubRank } from "./ClubRank";
 import type { ClubRankAttributes, ClubRankCreationAttributes } from "./ClubRank";
 import { ClubTag as _ClubTag } from "./ClubTag";
@@ -41,6 +43,7 @@ export {
     _ClubCoordinator as ClubCoordinator,
     _ClubEvent as ClubEvent,
     _ClubMember as ClubMember,
+    _ClubNotification as ClubNotification,
     _ClubRank as ClubRank,
     _ClubTag as ClubTag,
     _Event as Event,
@@ -66,6 +69,8 @@ export type {
     ClubEventCreationAttributes,
     ClubMemberAttributes,
     ClubMemberCreationAttributes,
+    ClubNotificationAttributes,
+    ClubNotificationCreationAttributes,
     ClubRankAttributes,
     ClubRankCreationAttributes,
     ClubTagAttributes,
@@ -101,6 +106,7 @@ export function initModels(sequelize: Sequelize) {
     const ClubCoordinator = _ClubCoordinator.initModel(sequelize);
     const ClubEvent = _ClubEvent.initModel(sequelize);
     const ClubMember = _ClubMember.initModel(sequelize);
+    const ClubNotification = _ClubNotification.initModel(sequelize);
     const ClubRank = _ClubRank.initModel(sequelize);
     const ClubTag = _ClubTag.initModel(sequelize);
     const Event = _Event.initModel(sequelize);
@@ -122,12 +128,12 @@ export function initModels(sequelize: Sequelize) {
     Club.hasMany(ClubEvent, { as: "ClubEvents", foreignKey: "clubId"});
     ClubMember.belongsTo(Club, { as: "club", foreignKey: "clubId"});
     Club.hasMany(ClubMember, { as: "ClubMembers", foreignKey: "clubId"});
+    ClubNotification.belongsTo(Club, { as: "club", foreignKey: "clubId"});
+    Club.hasMany(ClubNotification, { as: "ClubNotifications", foreignKey: "clubId"});
     ClubRank.belongsTo(Club, { as: "club", foreignKey: "clubId"});
     Club.hasOne(ClubRank, { as: "ClubRank", foreignKey: "clubId"});
     ClubTag.belongsTo(Club, { as: "club", foreignKey: "clubId"});
     Club.hasMany(ClubTag, { as: "ClubTags", foreignKey: "clubId"});
-    Notification.belongsTo(Club, { as: "club", foreignKey: "clubId"});
-    Club.hasOne(Notification, { as: "Notification", foreignKey: "clubId"});
     OTP.belongsTo(Club, { as: "club", foreignKey: "clubId"});
     Club.hasOne(OTP, { as: "OTP", foreignKey: "clubId"});
     Subscription.belongsTo(Club, { as: "club", foreignKey: "clubId"});
@@ -140,6 +146,8 @@ export function initModels(sequelize: Sequelize) {
     Event.hasMany(RSVPEvent, { as: "RSVPEvents", foreignKey: "eventId"});
     Vote.belongsTo(Event, { as: "event", foreignKey: "eventId"});
     Event.hasMany(Vote, { as: "Votes", foreignKey: "eventId"});
+    ClubNotification.belongsTo(Notification, { as: "notification", foreignKey: "notificationId"});
+    Notification.hasMany(ClubNotification, { as: "ClubNotifications", foreignKey: "notificationId"});
     UserNotification.belongsTo(Notification, { as: "notification", foreignKey: "notificationId"});
     Notification.hasMany(UserNotification, { as: "UserNotifications", foreignKey: "notificationId"});
     ClubTag.belongsTo(Tag, { as: "tag", foreignKey: "tagId"});
@@ -170,6 +178,7 @@ export function initModels(sequelize: Sequelize) {
         ClubCoordinator: ClubCoordinator,
         ClubEvent: ClubEvent,
         ClubMember: ClubMember,
+        ClubNotification: ClubNotification,
         ClubRank: ClubRank,
         ClubTag: ClubTag,
         Event: Event,
